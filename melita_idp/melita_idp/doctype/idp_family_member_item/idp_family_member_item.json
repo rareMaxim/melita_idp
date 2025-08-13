@@ -1,0 +1,60 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-08-13 19:08:12.824395",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "member_name",
+  "member_date_of_birth",
+  "member_gender",
+  "relationship"
+ ],
+ "fields": [
+  {
+   "fieldname": "member_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "\u0406\u043c'\u044f",
+   "reqd": 1
+  },
+  {
+   "fieldname": "member_date_of_birth",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "\u0414\u0430\u0442\u0430 \u043d\u0430\u0440\u043e\u0434\u0436\u0435\u043d\u043d\u044f",
+   "reqd": 1
+  },
+  {
+   "fieldname": "member_gender",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "\u0421\u0442\u0430\u0442\u044c",
+   "options": "\u0427\u043e\u043b\u043e\u0432\u0456\u0447\u0430\n\u0416\u0456\u043d\u043e\u0447\u0430",
+   "reqd": 1
+  },
+  {
+   "fieldname": "relationship",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "\u0417\u0432'\u044f\u0437\u043e\u043a",
+   "options": "\u0414\u0440\u0443\u0436\u0438\u043d\u0430/\u0427\u043e\u043b\u043e\u0432\u0456\u043a\n\u0414\u0438\u0442\u0438\u043d\u0430\n\u0411\u0430\u0442\u044c\u043a\u043e/\u041c\u0430\u0442\u0438\n\u0414\u0456\u0434\u0443\u0441\u044c/\u0411\u0430\u0431\u0443\u0441\u044f\n\u0406\u043d\u0448\u0435",
+   "reqd": 1
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2025-08-13 19:21:55.885341",
+ "modified_by": "Administrator",
+ "module": "Melita Idp",
+ "name": "IDP Family Member Item",
+ "owner": "Administrator",
+ "permissions": [],
+ "row_format": "Dynamic",
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": []
+}
