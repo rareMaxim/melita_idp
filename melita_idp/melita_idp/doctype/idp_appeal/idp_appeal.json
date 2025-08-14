@@ -1,0 +1,70 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format:\u0412\u0414\u0427-{#####}",
+ "creation": "2025-08-14 10:03:38.376802",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "date",
+  "column_break_jtfb",
+  "applicant",
+  "section_break_jokq",
+  "services"
+ ],
+ "fields": [
+  {
+   "default": "Today",
+   "fieldname": "date",
+   "fieldtype": "Date",
+   "label": "\u0414\u0430\u0442\u0430 \u0437\u0432\u0435\u0440\u043d\u0435\u043d\u043d\u044f"
+  },
+  {
+   "fieldname": "applicant",
+   "fieldtype": "Link",
+   "label": "\u0417\u0430\u044f\u0432\u043d\u0438\u043a",
+   "options": "IDP Beneficiary"
+  },
+  {
+   "fieldname": "column_break_jtfb",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_jokq",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "services",
+   "fieldtype": "Table",
+   "label": "\u041f\u043e\u0441\u043b\u0443\u0433\u0438",
+   "options": "IDP Service Table"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2025-08-14 10:31:41.227380",
+ "modified_by": "Administrator",
+ "module": "Melita Idp",
+ "name": "IDP Appeal",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": []
+}
