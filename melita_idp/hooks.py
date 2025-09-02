@@ -143,23 +143,21 @@ app_license = "mit"
 # Scheduled Tasks
 # ---------------
 
-# scheduler_events = {
-# 	"all": [
-# 		"melita_idp.tasks.all"
-# 	],
-# 	"daily": [
-# 		"melita_idp.tasks.daily"
-# 	],
-# 	"hourly": [
-# 		"melita_idp.tasks.hourly"
-# 	],
-# 	"weekly": [
-# 		"melita_idp.tasks.weekly"
-# 	],
-# 	"monthly": [
-# 		"melita_idp.tasks.monthly"
-# 	],
-# }
+scheduler_events = {
+	# 	"all": [
+	# 		"melita_idp.tasks.all"
+	# 	],
+	"daily": ["melita_idp.melita_idp.doctype.idp_beneficiary.idp_beneficiary.update_beneficiary_age"],
+	# 	"hourly": [
+	# 		"melita_idp.tasks.hourly"
+	# 	],
+	# 	"weekly": [
+	# 		"melita_idp.tasks.weekly"
+	# 	],
+	# 	"monthly": [
+	# 		"melita_idp.tasks.monthly"
+	# 	],
+}
 
 # Testing
 # -------
@@ -231,9 +229,8 @@ app_license = "mit"
 # ]
 
 # Automatically update python controller files with type annotations for this app.
-# export_python_type_annotations = True
+export_python_type_annotations = True
 
-# default_log_clearing_doctypes = {
-# 	"Logging DocType Name": 30  # days to retain logs
-# }
-
+default_log_clearing_doctypes = {
+	"Logging DocType Name": 30  # days to retain logs
+}

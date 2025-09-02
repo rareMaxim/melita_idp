@@ -8,50 +8,81 @@
  "field_order": [
   "main_info_tab",
   "section_identification",
+  "last_name",
+  "first_name",
+  "middle_name",
   "full_name",
-  "idp_certificate_number",
-  "tax_id",
+  "photo",
   "column_break_nypr",
-  "registration_date",
-  "gender",
+  "tax_id",
   "date_of_birth",
+  "gender",
+  "age",
   "section_contact_info",
   "phone",
   "column_break_hbee",
   "contact_email",
+  "status_section",
+  "column_break_wnlm",
+  "registration_center",
+  "registration_date",
+  "column_break_bley",
+  "status",
+  "death_date",
+  "column_break_csci",
+  "last_visit_date",
+  "vpo_info_column",
+  "idp_certificate_number",
+  "column_break_zuzf",
+  "vpo_certificate_date",
+  "address_section",
+  "\u0437\u0432\u0456\u0434\u043a\u0438_\u043f\u0435\u0440\u0435\u043c\u0456\u0441\u0442\u0438\u0432\u0441\u044f_column",
+  "origin_region",
+  "origin_community",
+  "registration_address",
+  "actual_address",
+  "column_break_uuqa",
+  "current_region",
+  "current_community",
+  "current_address",
+  "social_section",
+  "vulnerability_categories",
+  "professional_activity_sphere",
+  "employment_status",
+  "health_status",
+  "education",
+  "column_break_hqmy",
+  "receives_vpo_allowance",
+  "is_bedridden",
+  "is_pregnant",
+  "is_single_parent",
   "\u0434\u0435\u0442\u0430\u043b\u0456_\u043f\u0435\u0440\u0435\u043c\u0456\u0449\u0435\u043d\u043d\u044f_section",
   "displacement_date",
   "displacement_status",
-  "socio_economic_tab",
-  "section_vulnerability_family",
-  "vulnerability_criteria",
-  "family_members",
-  "housing_status",
-  "employment_status",
-  "income_per_family_member",
-  "special_needs",
   "consent_tab",
   "section_consent_signature",
-  "\u0437\u0433\u043e\u0434\u0430_\u043d\u0430_\u043e\u0431\u0440\u043e\u0431\u043a\u0443_\u0434\u0430\u043d\u0438\u0445",
-  "electronic_signature"
+  "personal_data_consent",
+  "electronic_signature",
+  "\u0441\u043b\u0443\u0436\u0431\u043e\u0432\u0430_\u0456\u043d\u0444\u043e\u0440\u043c\u0430\u0446\u0456\u044f_tab"
  ],
  "fields": [
   {
+   "description": "\u0412\u0441\u0435, \u0449\u043e \u043f\u043e\u0442\u0440\u0456\u0431\u043d\u043e \u0434\u043b\u044f \u0448\u0432\u0438\u0434\u043a\u043e\u0457 \u0456\u0434\u0435\u043d\u0442\u0438\u0444\u0456\u043a\u0430\u0446\u0456\u0457 \u043b\u044e\u0434\u0438\u043d\u0438. \u0426\u0435 \u0456\u043d\u0444\u043e\u0440\u043c\u0430\u0446\u0456\u044f, \u044f\u043a\u0430 \u0437\u043c\u0456\u043d\u044e\u0454\u0442\u044c\u0441\u044f \u0440\u0456\u0434\u043a\u043e",
    "fieldname": "main_info_tab",
    "fieldtype": "Tab Break",
-   "label": "\u041e\u0441\u043d\u043e\u0432\u043d\u0430 \u0456\u043d\u0444\u043e\u0440\u043c\u0430\u0446\u0456\u044f"
+   "label": "\u0413\u043e\u043b\u043e\u0432\u043d\u0430 \u0456\u043d\u0444\u043e\u0440\u043c\u0430\u0446\u0456\u044f"
   },
   {
    "fieldname": "section_identification",
    "fieldtype": "Section Break",
-   "label": "\u0406\u0434\u0435\u043d\u0442\u0438\u0444\u0456\u043a\u0430\u0446\u0456\u044f"
+   "label": "\u041e\u0441\u043d\u043e\u0432\u043d\u0430 \u0456\u043d\u0444\u043e\u0440\u043c\u0430\u0446\u0456\u044f"
   },
   {
    "fieldname": "full_name",
    "fieldtype": "Data",
    "in_list_view": 1,
    "label": "\u041f\u043e\u0432\u043d\u0435 \u0456\u043c'\u044f",
-   "reqd": 1
+   "read_only": 1
   },
   {
    "description": "\u0417\u0430\u043f\u043e\u0432\u043d\u044e\u0454\u0442\u044c\u0441\u044f \u0430\u0432\u0442\u043e\u043c\u0430\u0442\u0438\u0447\u043d\u043e \u043f\u0456\u0441\u043b\u044f \u0420\u041d\u041e\u041a\u041f\u041f",
@@ -71,15 +102,13 @@
    "fieldname": "idp_certificate_number",
    "fieldtype": "Data",
    "label": "\u041d\u043e\u043c\u0435\u0440 \u0434\u043e\u0432\u0456\u0434\u043a\u0438 \u0412\u041f\u041e",
-   "reqd": 1,
    "unique": 1
   },
   {
    "default": "Today",
    "fieldname": "registration_date",
    "fieldtype": "Date",
-   "label": "\u0414\u0430\u0442\u0430 \u0440\u0435\u0454\u0441\u0442\u0440\u0430\u0446\u0456\u0457",
-   "reqd": 1
+   "label": "\u0414\u0430\u0442\u0430 \u0440\u0435\u0454\u0441\u0442\u0440\u0430\u0446\u0456\u0457"
   },
   {
    "fieldname": "column_break_nypr",
@@ -110,56 +139,16 @@
    "label": "\u0414\u0430\u0442\u0430 \u043f\u0435\u0440\u0435\u043c\u0456\u0449\u0435\u043d\u043d\u044f"
   },
   {
-   "fieldname": "socio_economic_tab",
-   "fieldtype": "Tab Break",
-   "label": "\u0421\u043e\u0446\u0456\u0430\u043b\u044c\u043d\u043e-\u0435\u043a\u043e\u043d\u043e\u043c\u0456\u0447\u043d\u0438\u0439 \u0441\u0442\u0430\u0442\u0443\u0441"
-  },
-  {
-   "fieldname": "section_vulnerability_family",
-   "fieldtype": "Section Break",
-   "label": "\u0412\u0440\u0430\u0437\u043b\u0438\u0432\u0456\u0441\u0442\u044c \u0442\u0430 \u0441\u0456\u043c'\u044f"
-  },
-  {
-   "fieldname": "housing_status",
-   "fieldtype": "Select",
-   "label": "\u0416\u0438\u0442\u043b\u043e\u0432\u0438\u0439 \u0441\u0442\u0430\u0442\u0443\u0441",
-   "options": "\u0412\u043b\u0430\u0441\u043d\u0435 \u0436\u0438\u0442\u043b\u043e\n\u041e\u0440\u0435\u043d\u0434\u043e\u0432\u0430\u043d\u0435 \u0436\u0438\u0442\u043b\u043e\n\u041a\u043e\u043b\u0435\u043a\u0442\u0438\u0432\u043d\u0438\u0439 \u0446\u0435\u043d\u0442\u0440\n\u0422\u0438\u043c\u0447\u0430\u0441\u043e\u0432\u0435 \u0436\u0438\u0442\u043b\u043e\n\u041f\u043e\u0448\u043a\u043e\u0434\u0436\u0435\u043d\u0435/\u0417\u0440\u0443\u0439\u043d\u043e\u0432\u0430\u043d\u0435"
-  },
-  {
    "fieldname": "displacement_status",
    "fieldtype": "Select",
    "label": "\u0421\u0442\u0430\u0442\u0443\u0441 \u043f\u0435\u0440\u0435\u043c\u0456\u0449\u0435\u043d\u043d\u044f",
    "options": "\u041d\u0435\u0449\u043e\u0434\u0430\u0432\u043d\u043e \u043f\u0435\u0440\u0435\u043c\u0456\u0449\u0435\u043d\u0438\u0439\n\u0414\u043e\u0432\u0433\u043e\u0441\u0442\u0440\u043e\u043a\u043e\u0432\u043e \u043f\u0435\u0440\u0435\u043c\u0456\u0449\u0435\u043d\u0438\u0439\n\u041f\u043e\u0432\u0435\u0440\u043d\u0443\u0432\u0441\u044f"
   },
   {
-   "fieldname": "vulnerability_criteria",
-   "fieldtype": "Table",
-   "label": "\u041a\u0440\u0438\u0442\u0435\u0440\u0456\u0457 \u0432\u0440\u0430\u0437\u043b\u0438\u0432\u043e\u0441\u0442\u0456",
-   "options": "IDP Vulnerability Criteria Item"
-  },
-  {
-   "fieldname": "family_members",
-   "fieldtype": "Table",
-   "label": "\u0427\u043b\u0435\u043d\u0438 \u0441\u0456\u043c'\u0457",
-   "options": "IDP Family Member Item"
-  },
-  {
    "fieldname": "employment_status",
    "fieldtype": "Select",
-   "label": "\u0421\u0442\u0430\u0442\u0443\u0441 \u0437\u0430\u0439\u043d\u044f\u0442\u043e\u0441\u0442\u0456",
-   "options": "\u041f\u0440\u0430\u0446\u0435\u0432\u043b\u0430\u0448\u0442\u043e\u0432\u0430\u043d\u0438\u0439\n\u0411\u0435\u0437\u0440\u043e\u0431\u0456\u0442\u043d\u0438\u0439\n\u041f\u0435\u043d\u0441\u0456\u043e\u043d\u0435\u0440\n\u0421\u0442\u0443\u0434\u0435\u043d\u0442\n\u0406\u043d\u0448\u0435"
-  },
-  {
-   "fieldname": "income_per_family_member",
-   "fieldtype": "Currency",
-   "label": "\u0414\u043e\u0445\u0456\u0434 \u043d\u0430 \u0447\u043b\u0435\u043d\u0430 \u0441\u0456\u043c'\u0457",
-   "options": "UAH"
-  },
-  {
-   "description": "\u0414\u0435\u0442\u0430\u043b\u044c\u043d\u0438\u0439 \u043e\u043f\u0438\u0441 \u0431\u0443\u0434\u044c-\u044f\u043a\u0438\u0445 \u043e\u0441\u043e\u0431\u043b\u0438\u0432\u0438\u0445 \u043f\u043e\u0442\u0440\u0435\u0431 (\u043d\u0430\u043f\u0440\u0438\u043a\u043b\u0430\u0434, \u0456\u043d\u0432\u0430\u043b\u0456\u0434\u043d\u0456\u0441\u0442\u044c, \u0445\u0440\u043e\u043d\u0456\u0447\u043d\u0456 \u0437\u0430\u0445\u0432\u043e\u0440\u044e\u0432\u0430\u043d\u043d\u044f, \u043f\u0441\u0438\u0445\u043e\u0441\u043e\u0446\u0456\u0430\u043b\u044c\u043d\u0430 \u043f\u0456\u0434\u0442\u0440\u0438\u043c\u043a\u0430)",
-   "fieldname": "special_needs",
-   "fieldtype": "Text Editor",
-   "label": "\u041e\u0441\u043e\u0431\u043b\u0438\u0432\u0456 \u043f\u043e\u0442\u0440\u0435\u0431\u0438"
+   "label": "\u041f\u0440\u0430\u0446\u0435\u0432\u043b\u0430\u0448\u0442\u0443\u0432\u0430\u043d\u043d\u044f",
+   "options": "\u041f\u0440\u0430\u0446\u0435\u0432\u043b\u0430\u0448\u0442\u043e\u0432\u0430\u043d\u0438\u0439\n\u0411\u0435\u0437\u0440\u043e\u0431\u0456\u0442\u043d\u0438\u0439\n\u0415\u043a\u043e\u043d\u043e\u043c\u0456\u0447\u043d\u043e \u043d\u0435\u0430\u043a\u0442\u0438\u0432\u043d\u0438\u0439"
   },
   {
    "fieldname": "consent_tab",
@@ -172,15 +161,10 @@
    "label": "\u0417\u0433\u043e\u0434\u0430 \u0442\u0430 \u043f\u0456\u0434\u0442\u0432\u0435\u0440\u0434\u0436\u0435\u043d\u043d\u044f"
   },
   {
-   "default": "0",
-   "fieldname": "\u0437\u0433\u043e\u0434\u0430_\u043d\u0430_\u043e\u0431\u0440\u043e\u0431\u043a\u0443_\u0434\u0430\u043d\u0438\u0445",
-   "fieldtype": "Check",
-   "label": "\u0417\u0433\u043e\u0434\u0430 \u043d\u0430 \u043e\u0431\u0440\u043e\u0431\u043a\u0443 \u0434\u0430\u043d\u0438\u0445"
-  },
-  {
    "fieldname": "electronic_signature",
    "fieldtype": "Signature",
-   "label": "\u0415\u043b\u0435\u043a\u0442\u0440\u043e\u043d\u043d\u0438\u0439 \u043f\u0456\u0434\u043f\u0438\u0441"
+   "label": "\u0415\u043b\u0435\u043a\u0442\u0440\u043e\u043d\u043d\u0438\u0439 \u043f\u0456\u0434\u043f\u0438\u0441",
+   "width": "1/5"
   },
   {
    "fieldname": "tax_id",
@@ -194,12 +178,222 @@
    "options": "Phone",
    "reqd": 1,
    "unique": 1
+  },
+  {
+   "fieldname": "last_name",
+   "fieldtype": "Data",
+   "label": "\u041f\u0440\u0438\u0437\u0432\u0438\u0449\u0435",
+   "reqd": 1
+  },
+  {
+   "fieldname": "first_name",
+   "fieldtype": "Data",
+   "label": "\u0406\u043c'\u044f",
+   "reqd": 1
+  },
+  {
+   "fieldname": "middle_name",
+   "fieldtype": "Data",
+   "label": "\u041f\u043e \u0431\u0430\u0442\u044c\u043a\u043e\u0432\u0456",
+   "reqd": 1
+  },
+  {
+   "fieldname": "photo",
+   "fieldtype": "Attach Image",
+   "label": "\u0424\u043e\u0442\u043e"
+  },
+  {
+   "description": "\u041e\u043d\u043e\u0432\u043b\u044e\u0454\u0442\u044c\u0441\u044f \u0430\u0432\u0442\u043e\u043c\u0430\u0442\u0438\u0447\u043d\u043e, \u0449\u043e\u0434\u0435\u043d\u043d\u043e",
+   "fieldname": "age",
+   "fieldtype": "Int",
+   "label": "\u0412\u0456\u043a (\u043f\u043e\u0432\u043d\u0438\u0445 \u0440\u043e\u043a\u0456\u0432)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "status_section",
+   "fieldtype": "Section Break",
+   "label": "\u0421\u0442\u0430\u0442\u0443\u0441 \u0442\u0430 \u0420\u0435\u0454\u0441\u0442\u0440\u0430\u0446\u0456\u044f"
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "\u0421\u0442\u0430\u0442\u0443\u0441 \u043a\u043b\u0456\u0454\u043d\u0442\u0430",
+   "options": "\u0410\u043a\u0442\u0438\u0432\u043d\u0438\u0439\n\u041f\u0435\u0440\u0435\u043c\u0456\u0441\u0442\u0438\u0432\u0441\u044f\n\u0417\u043d\u044f\u0442\u043e \u0437 \u043e\u0431\u043b\u0456\u043a\u0443\n\u041f\u043e\u043c\u0435\u0440",
+   "reqd": 1
+  },
+  {
+   "depends_on": "eval:doc.status=='\u041f\u043e\u043c\u0435\u0440'",
+   "fieldname": "death_date",
+   "fieldtype": "Date",
+   "label": "\u0414\u0430\u0442\u0430 \u0441\u043c\u0435\u0440\u0442\u0456",
+   "mandatory_depends_on": "eval:doc.status=='\u041f\u043e\u043c\u0435\u0440'"
+  },
+  {
+   "fieldname": "column_break_wnlm",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "registration_center",
+   "fieldtype": "Link",
+   "label": "\u0426\u0435\u043d\u0442\u0440 \u0420\u0435\u0454\u0441\u0442\u0440\u0430\u0446\u0456\u0457",
+   "options": "IDP Support Center",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_csci",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "last_visit_date",
+   "fieldtype": "Date",
+   "label": "\u0414\u0430\u0442\u0430 \u043e\u0441\u0442\u0430\u043d\u043d\u044c\u043e\u0433\u043e \u0432\u0456\u0437\u0438\u0442\u0443",
+   "read_only": 1
+  },
+  {
+   "fieldname": "vpo_info_column",
+   "fieldtype": "Section Break",
+   "label": "\u0406\u043d\u0444\u043e\u0440\u043c\u0430\u0446\u0456\u044f \u0412\u041f\u041e"
+  },
+  {
+   "fieldname": "column_break_zuzf",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "vpo_certificate_date",
+   "fieldtype": "Date",
+   "label": "\u0414\u0430\u0442\u0430 \u0432\u0438\u0434\u0430\u0447\u0456 \u0434\u043e\u0432\u0456\u0434\u043a\u0438 \u0412\u041f\u041e"
+  },
+  {
+   "fieldname": "address_section",
+   "fieldtype": "Section Break",
+   "label": "\u0410\u0434\u0440\u0435\u0441\u0438"
+  },
+  {
+   "fieldname": "\u0437\u0432\u0456\u0434\u043a\u0438_\u043f\u0435\u0440\u0435\u043c\u0456\u0441\u0442\u0438\u0432\u0441\u044f_column",
+   "fieldtype": "Column Break",
+   "label": "\u0417\u0432\u0456\u0434\u043a\u0438 \u043f\u0435\u0440\u0435\u043c\u0456\u0441\u0442\u0438\u0432\u0441\u044f"
+  },
+  {
+   "fieldname": "origin_region",
+   "fieldtype": "Data",
+   "label": "\u041e\u0431\u043b\u0430\u0441\u0442\u044c"
+  },
+  {
+   "fieldname": "origin_community",
+   "fieldtype": "Data",
+   "label": "\u0413\u0440\u043e\u043c\u0430\u0434\u0430 / \u041d\u0430\u0441\u0435\u043b\u0435\u043d\u0438\u0439 \u043f\u0443\u043d\u043a\u0442"
+  },
+  {
+   "fieldname": "registration_address",
+   "fieldtype": "Link",
+   "label": "\u0410\u0434\u0440\u0435\u0441\u0430 \u0440\u0435\u0454\u0441\u0442\u0440\u0430\u0446\u0456\u0457",
+   "options": "IDP Address"
+  },
+  {
+   "fieldname": "actual_address",
+   "fieldtype": "Link",
+   "label": "\u0410\u0434\u0440\u0435\u0441\u0430 \u0444\u0430\u043a\u0442\u0438\u0447\u043d\u043e\u0433\u043e \u043c\u0456\u0441\u0446\u044f \u043f\u0440\u043e\u0436\u0438\u0432\u0430\u043d\u043d\u044f",
+   "options": "IDP Address"
+  },
+  {
+   "fieldname": "column_break_uuqa",
+   "fieldtype": "Column Break",
+   "label": "\u041f\u043e\u0442\u043e\u0447\u043d\u0435 \u043c\u0456\u0441\u0446\u0435 \u043f\u0440\u043e\u0436\u0438\u0432\u0430\u043d\u043d\u044f"
+  },
+  {
+   "fieldname": "current_region",
+   "fieldtype": "Data",
+   "label": "\u041e\u0431\u043b\u0430\u0441\u0442\u044c"
+  },
+  {
+   "fieldname": "current_community",
+   "fieldtype": "Data",
+   "label": "\u0413\u0440\u043e\u043c\u0430\u0434\u0430 / \u041d\u0430\u0441\u0435\u043b\u0435\u043d\u0438\u0439 \u043f\u0443\u043d\u043a\u0442"
+  },
+  {
+   "fieldname": "current_address",
+   "fieldtype": "Small Text",
+   "label": "\u0410\u0434\u0440\u0435\u0441\u0430 (\u0432\u0443\u043b\u0438\u0446\u044f, \u0434\u0456\u043c, \u043a\u0432.)"
+  },
+  {
+   "fieldname": "social_section",
+   "fieldtype": "Section Break",
+   "label": "\u0421\u043e\u0446\u0456\u0430\u043b\u044c\u043d\u0430 \u0406\u043d\u0444\u043e\u0440\u043c\u0430\u0446\u0456\u044f \u0442\u0430 \u0417\u0434\u043e\u0440\u043e\u0432'\u044f"
+  },
+  {
+   "fieldname": "vulnerability_categories",
+   "fieldtype": "Table MultiSelect",
+   "label": "\u0413\u0440\u0443\u043f\u0430 \u0456\u043d\u0432\u0430\u043b\u0456\u0434\u043d\u043e\u0441\u0442\u0456",
+   "options": "IDP Vulnerability Table"
+  },
+  {
+   "fieldname": "health_status",
+   "fieldtype": "Select",
+   "label": "\u0421\u0442\u0430\u043d \u0437\u0434\u043e\u0440\u043e\u0432'\u044f",
+   "options": "\u0417\u0430\u0434\u043e\u0432\u0456\u043b\u044c\u043d\u0438\u0439\n\u041f\u043e\u0442\u0440\u0435\u0431\u0443\u0454 \u0434\u043e\u0433\u043b\u044f\u0434\u0443\n\u041b\u0435\u0436\u0430\u0447\u0438\u0439"
+  },
+  {
+   "fieldname": "education",
+   "fieldtype": "Select",
+   "label": "\u041e\u0441\u0432\u0456\u0442\u0430",
+   "options": "\u041f\u043e\u0447\u0430\u0442\u043a\u043e\u0432\u0430\n\u0421\u0435\u0440\u0435\u0434\u043d\u044f\n\u0421\u0435\u0440\u0435\u0434\u043d\u044c\u043e-\u0441\u043f\u0435\u0446\u0456\u0430\u043b\u044c\u043d\u0430\n\u0412\u0438\u0449\u0430"
+  },
+  {
+   "fieldname": "\u0441\u043b\u0443\u0436\u0431\u043e\u0432\u0430_\u0456\u043d\u0444\u043e\u0440\u043c\u0430\u0446\u0456\u044f_tab",
+   "fieldtype": "Tab Break",
+   "label": "\u0421\u043b\u0443\u0436\u0431\u043e\u0432\u0430 \u0456\u043d\u0444\u043e\u0440\u043c\u0430\u0446\u0456\u044f"
+  },
+  {
+   "fieldname": "professional_activity_sphere",
+   "fieldtype": "Link",
+   "label": "\u0421\u0444\u0435\u0440\u0430 \u043f\u0440\u043e\u0444\u0435\u0441\u0456\u0439\u043d\u043e\u0457 \u0434\u0456\u044f\u043b\u044c\u043d\u043e\u0441\u0442\u0456",
+   "options": "IDP Professional Activity Sphere"
+  },
+  {
+   "fieldname": "column_break_bley",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_hqmy",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "receives_vpo_allowance",
+   "fieldtype": "Check",
+   "label": "\u041e\u0442\u0440\u0438\u043c\u0443\u0454 \u0434\u043e\u043f\u043e\u043c\u043e\u0433\u0443 \u043d\u0430 \u043f\u0440\u043e\u0436\u0438\u0432\u0430\u043d\u043d\u044f"
+  },
+  {
+   "default": "0",
+   "fieldname": "is_bedridden",
+   "fieldtype": "Check",
+   "label": "\u041b\u0435\u0436\u0430\u0447\u0438\u0439 \u0445\u0432\u043e\u0440\u0438\u0439"
+  },
+  {
+   "default": "0",
+   "depends_on": "eval:doc.gender=='\u0416\u0456\u043d\u043e\u0447\u0430'",
+   "fieldname": "is_pregnant",
+   "fieldtype": "Check",
+   "label": "\u0412\u0430\u0433\u0456\u0442\u043d\u0456\u0441\u0442\u044c "
+  },
+  {
+   "default": "0",
+   "fieldname": "is_single_parent",
+   "fieldtype": "Check",
+   "label": "\u041e\u0434\u0438\u043d\u043e\u043a\u0438\u0439 \u0431\u0430\u0442\u044c\u043a\u043e/\u043c\u0430\u0442\u0438"
+  },
+  {
+   "default": "0",
+   "fieldname": "personal_data_consent",
+   "fieldtype": "Check",
+   "label": "\u0417\u0433\u043e\u0434\u0430 \u043d\u0430 \u043e\u0431\u0440\u043e\u0431\u043a\u0443 \u0434\u0430\u043d\u0438\u0445"
   }
  ],
  "grid_page_length": 50,
+ "image_field": "photo",
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-08-14 10:35:41.050616",
+ "modified": "2025-09-02 14:01:20.588393",
  "modified_by": "Administrator",
  "module": "Melita Idp",
  "name": "IDP Beneficiary",

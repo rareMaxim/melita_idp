@@ -5,7 +5,7 @@
 from frappe.model.document import Document
 
 
-class IDPFamily(Document):
+class IDPProfessionalActivitySphere(Document):
 	# begin: auto-generated types
 	# This code is auto-generated. Do not modify anything in this block.
 
@@ -14,13 +14,7 @@ class IDPFamily(Document):
 	if TYPE_CHECKING:
 		from frappe.types import DF
 
-		from melita_idp.melita_idp.doctype.idp_family_table.idp_family_table import IDPFamilyTable
-
-		family_members: DF.Table[IDPFamilyTable]
-		family_name: DF.Data | None
-		head_of_family: DF.Link | None
-		in_difficult_life_circumstances: DF.Check
-		lives_in_mkp: DF.Check
+		sphere_name: DF.Data
 	# end: auto-generated types
 
 	pass
