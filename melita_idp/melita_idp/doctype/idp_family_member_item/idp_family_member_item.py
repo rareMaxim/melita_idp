@@ -6,4 +6,30 @@ from frappe.model.document import Document
 
 
 class IDPFamilyMemberItem(Document):
+	# begin: auto-generated types
+	# This code is auto-generated. Do not modify anything in this block.
+
+	from typing import TYPE_CHECKING
+
+	if TYPE_CHECKING:
+		from frappe.types import DF
+
+		member: DF.Link
+		member_date_of_birth: DF.Date | None
+		member_gender: DF.Literal[
+			"\u0427\u043e\u043b\u043e\u0432\u0456\u0447\u0430", "\u0416\u0456\u043d\u043e\u0447\u0430"
+		]
+		parent: DF.Data
+		parentfield: DF.Data
+		parenttype: DF.Data
+		relationship: DF.Literal[
+			"\u0413\u043e\u043b\u043e\u0432\u0430 \u0434\u043e\u043c\u043e\u0433\u043e\u0441\u043f\u043e\u0434\u0430\u0440\u0441\u0442\u0432\u0430",
+			"\u0414\u0440\u0443\u0436\u0438\u043d\u0430/\u0427\u043e\u043b\u043e\u0432\u0456\u043a",
+			"\u0414\u0438\u0442\u0438\u043d\u0430",
+			"\u0411\u0430\u0442\u044c\u043a\u043e/\u041c\u0430\u0442\u0438",
+			"\u0414\u0456\u0434\u0443\u0441\u044c/\u0411\u0430\u0431\u0443\u0441\u044f",
+			"\u0406\u043d\u0448\u0435",
+		]
+	# end: auto-generated types
+
 	pass

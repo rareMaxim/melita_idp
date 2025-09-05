@@ -14,10 +14,11 @@ class IDPFamily(Document):
 	if TYPE_CHECKING:
 		from frappe.types import DF
 
-		from melita_idp.melita_idp.doctype.idp_family_table.idp_family_table import IDPFamilyTable
+		from melita_idp.melita_idp.doctype.idp_family_member_item.idp_family_member_item import (
+			IDPFamilyMemberItem,
+		)
 
-		family_members: DF.Table[IDPFamilyTable]
-		family_name: DF.Data | None
+		family_members: DF.Table[IDPFamilyMemberItem]
 		head_of_family: DF.Link | None
 		in_difficult_life_circumstances: DF.Check
 		lives_in_mkp: DF.Check

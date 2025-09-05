@@ -11,17 +11,19 @@
   "last_name",
   "first_name",
   "middle_name",
-  "full_name",
-  "photo",
   "column_break_nypr",
   "tax_id",
   "date_of_birth",
   "gender",
-  "age",
   "section_contact_info",
   "phone",
   "column_break_hbee",
   "contact_email",
+  "section_break_shbi",
+  "document",
+  "column_break_mwmp",
+  "document_type",
+  "\u0456\u043d\u0444\u043e\u0440\u043c\u0430\u0446\u0456\u044f_\u0432\u043f\u043e_tab",
   "status_section",
   "column_break_wnlm",
   "registration_center",
@@ -35,42 +37,51 @@
   "idp_certificate_number",
   "column_break_zuzf",
   "vpo_certificate_date",
+  "\u0434\u0435\u0442\u0430\u043b\u0456_\u043f\u0435\u0440\u0435\u043c\u0456\u0449\u0435\u043d\u043d\u044f_section",
+  "displacement_date",
+  "column_break_tyqa",
+  "displacement_status",
+  "\u0430\u0434\u0440\u0435\u0441\u0438_tab",
   "address_section",
   "\u0437\u0432\u0456\u0434\u043a\u0438_\u043f\u0435\u0440\u0435\u043c\u0456\u0441\u0442\u0438\u0432\u0441\u044f_column",
   "origin_region",
-  "origin_community",
-  "registration_address",
-  "actual_address",
   "column_break_uuqa",
   "current_region",
-  "current_community",
   "current_address",
+  "\u0441\u043e\u0446\u0456\u0430\u043b\u044c\u043d\u0430_\u0456\u043d\u0444\u043e\u0440\u043c\u0430\u0446\u0456\u044f_tab",
   "social_section",
   "vulnerability_categories",
-  "professional_activity_sphere",
-  "employment_status",
   "health_status",
-  "education",
-  "column_break_hqmy",
-  "receives_vpo_allowance",
+  "column_break_hqiq",
   "is_bedridden",
   "is_pregnant",
   "is_single_parent",
-  "\u0434\u0435\u0442\u0430\u043b\u0456_\u043f\u0435\u0440\u0435\u043c\u0456\u0449\u0435\u043d\u043d\u044f_section",
-  "displacement_date",
-  "displacement_status",
+  "receives_vpo_allowance",
+  "\u043e\u0441\u0432\u0456\u0442\u0430_\u0442\u0430_\u0437\u0430\u0439\u043d\u044f\u0442\u0456\u0441\u0442\u044c_section",
+  "education",
+  "column_break_ghpe",
+  "professional_activity_sphere",
+  "column_break_mvsw",
+  "employment_status",
+  "\u0440\u043e\u0434\u0438\u043d\u0430_tab",
+  "family",
+  "section_break_ouzu",
+  "family_info_html",
   "consent_tab",
   "section_consent_signature",
   "personal_data_consent",
   "electronic_signature",
-  "\u0441\u043b\u0443\u0436\u0431\u043e\u0432\u0430_\u0456\u043d\u0444\u043e\u0440\u043c\u0430\u0446\u0456\u044f_tab"
+  "\u0441\u043b\u0443\u0436\u0431\u043e\u0432\u0430_\u0456\u043d\u0444\u043e\u0440\u043c\u0430\u0446\u0456\u044f_tab",
+  "full_name",
+  "age",
+  "photo"
  ],
  "fields": [
   {
    "description": "\u0412\u0441\u0435, \u0449\u043e \u043f\u043e\u0442\u0440\u0456\u0431\u043d\u043e \u0434\u043b\u044f \u0448\u0432\u0438\u0434\u043a\u043e\u0457 \u0456\u0434\u0435\u043d\u0442\u0438\u0444\u0456\u043a\u0430\u0446\u0456\u0457 \u043b\u044e\u0434\u0438\u043d\u0438. \u0426\u0435 \u0456\u043d\u0444\u043e\u0440\u043c\u0430\u0446\u0456\u044f, \u044f\u043a\u0430 \u0437\u043c\u0456\u043d\u044e\u0454\u0442\u044c\u0441\u044f \u0440\u0456\u0434\u043a\u043e",
    "fieldname": "main_info_tab",
    "fieldtype": "Tab Break",
-   "label": "\u0413\u043e\u043b\u043e\u0432\u043d\u0430 \u0456\u043d\u0444\u043e\u0440\u043c\u0430\u0446\u0456\u044f"
+   "label": "\u041e\u0441\u043d\u043e\u0432\u043d\u0430 \u0456\u043d\u0444\u043e\u0440\u043c\u0430\u0446\u0456\u044f"
   },
   {
    "fieldname": "section_identification",
@@ -88,6 +99,8 @@
    "description": "\u0417\u0430\u043f\u043e\u0432\u043d\u044e\u0454\u0442\u044c\u0441\u044f \u0430\u0432\u0442\u043e\u043c\u0430\u0442\u0438\u0447\u043d\u043e \u043f\u0456\u0441\u043b\u044f \u0420\u041d\u041e\u041a\u041f\u041f",
    "fieldname": "date_of_birth",
    "fieldtype": "Date",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "\u0414\u0430\u0442\u0430 \u043d\u0430\u0440\u043e\u0434\u0436\u0435\u043d\u043d\u044f"
   },
   {
@@ -95,7 +108,7 @@
    "fieldname": "gender",
    "fieldtype": "Select",
    "label": "\u0421\u0442\u0430\u0442\u044c",
-   "options": "\u0427\u043e\u043b\u043e\u0432\u0456\u0447\u0430\n\u0416\u0456\u043d\u043e\u0447\u0430",
+   "options": "\n\u0427\u043e\u043b\u043e\u0432\u0456\u0447\u0430\n\u0416\u0456\u043d\u043e\u0447\u0430",
    "reqd": 1
   },
   {
@@ -169,11 +182,15 @@
   {
    "fieldname": "tax_id",
    "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "\u0420\u041d\u041e\u041a\u041f\u041f"
   },
   {
    "fieldname": "phone",
    "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "\u0422\u0435\u043b\u0435\u0444\u043e\u043d",
    "options": "Phone",
    "reqd": 1,
@@ -212,7 +229,7 @@
   {
    "fieldname": "status_section",
    "fieldtype": "Section Break",
-   "label": "\u0421\u0442\u0430\u0442\u0443\u0441 \u0442\u0430 \u0420\u0435\u0454\u0441\u0442\u0440\u0430\u0446\u0456\u044f"
+   "label": "\u041e\u0431\u043b\u0456\u043a \u0442\u0430 \u0441\u0442\u0430\u0442\u0443\u0441"
   },
   {
    "fieldname": "status",
@@ -225,8 +242,7 @@
    "depends_on": "eval:doc.status=='\u041f\u043e\u043c\u0435\u0440'",
    "fieldname": "death_date",
    "fieldtype": "Date",
-   "label": "\u0414\u0430\u0442\u0430 \u0441\u043c\u0435\u0440\u0442\u0456",
-   "mandatory_depends_on": "eval:doc.status=='\u041f\u043e\u043c\u0435\u0440'"
+   "label": "\u0414\u0430\u0442\u0430 \u0441\u043c\u0435\u0440\u0442\u0456"
   },
   {
    "fieldname": "column_break_wnlm",
@@ -252,7 +268,7 @@
   {
    "fieldname": "vpo_info_column",
    "fieldtype": "Section Break",
-   "label": "\u0406\u043d\u0444\u043e\u0440\u043c\u0430\u0446\u0456\u044f \u0412\u041f\u041e"
+   "label": "\u0414\u043e\u0432\u0456\u0434\u043a\u0430 \u0412\u041f\u041e"
   },
   {
    "fieldname": "column_break_zuzf",
@@ -274,26 +290,11 @@
    "label": "\u0417\u0432\u0456\u0434\u043a\u0438 \u043f\u0435\u0440\u0435\u043c\u0456\u0441\u0442\u0438\u0432\u0441\u044f"
   },
   {
+   "default": "UA23080000000090746",
    "fieldname": "origin_region",
-   "fieldtype": "Data",
-   "label": "\u041e\u0431\u043b\u0430\u0441\u0442\u044c"
-  },
-  {
-   "fieldname": "origin_community",
-   "fieldtype": "Data",
-   "label": "\u0413\u0440\u043e\u043c\u0430\u0434\u0430 / \u041d\u0430\u0441\u0435\u043b\u0435\u043d\u0438\u0439 \u043f\u0443\u043d\u043a\u0442"
-  },
-  {
-   "fieldname": "registration_address",
    "fieldtype": "Link",
-   "label": "\u0410\u0434\u0440\u0435\u0441\u0430 \u0440\u0435\u0454\u0441\u0442\u0440\u0430\u0446\u0456\u0457",
-   "options": "IDP Address"
-  },
-  {
-   "fieldname": "actual_address",
-   "fieldtype": "Link",
-   "label": "\u0410\u0434\u0440\u0435\u0441\u0430 \u0444\u0430\u043a\u0442\u0438\u0447\u043d\u043e\u0433\u043e \u043c\u0456\u0441\u0446\u044f \u043f\u0440\u043e\u0436\u0438\u0432\u0430\u043d\u043d\u044f",
-   "options": "IDP Address"
+   "label": "\u041d\u0430\u0441\u0435\u043b\u0435\u043d\u0438\u0439 \u043f\u0443\u043d\u043a\u0442",
+   "options": "KATOTTG"
   },
   {
    "fieldname": "column_break_uuqa",
@@ -302,13 +303,9 @@
   },
   {
    "fieldname": "current_region",
-   "fieldtype": "Data",
-   "label": "\u041e\u0431\u043b\u0430\u0441\u0442\u044c"
-  },
-  {
-   "fieldname": "current_community",
-   "fieldtype": "Data",
-   "label": "\u0413\u0440\u043e\u043c\u0430\u0434\u0430 / \u041d\u0430\u0441\u0435\u043b\u0435\u043d\u0438\u0439 \u043f\u0443\u043d\u043a\u0442"
+   "fieldtype": "Link",
+   "label": "\u041d\u0430\u0441\u0435\u043b\u0435\u043d\u0438\u0439 \u043f\u0443\u043d\u043a\u0442",
+   "options": "KATOTTG"
   },
   {
    "fieldname": "current_address",
@@ -323,7 +320,7 @@
   {
    "fieldname": "vulnerability_categories",
    "fieldtype": "Table MultiSelect",
-   "label": "\u0413\u0440\u0443\u043f\u0430 \u0456\u043d\u0432\u0430\u043b\u0456\u0434\u043d\u043e\u0441\u0442\u0456",
+   "label": "\u041a\u0430\u0442\u0435\u0433\u043e\u0440\u0456\u0457 \u0432\u0440\u0430\u0437\u043b\u0438\u0432\u043e\u0441\u0442\u0456",
    "options": "IDP Vulnerability Table"
   },
   {
@@ -339,11 +336,6 @@
    "options": "\u041f\u043e\u0447\u0430\u0442\u043a\u043e\u0432\u0430\n\u0421\u0435\u0440\u0435\u0434\u043d\u044f\n\u0421\u0435\u0440\u0435\u0434\u043d\u044c\u043e-\u0441\u043f\u0435\u0446\u0456\u0430\u043b\u044c\u043d\u0430\n\u0412\u0438\u0449\u0430"
   },
   {
-   "fieldname": "\u0441\u043b\u0443\u0436\u0431\u043e\u0432\u0430_\u0456\u043d\u0444\u043e\u0440\u043c\u0430\u0446\u0456\u044f_tab",
-   "fieldtype": "Tab Break",
-   "label": "\u0421\u043b\u0443\u0436\u0431\u043e\u0432\u0430 \u0456\u043d\u0444\u043e\u0440\u043c\u0430\u0446\u0456\u044f"
-  },
-  {
    "fieldname": "professional_activity_sphere",
    "fieldtype": "Link",
    "label": "\u0421\u0444\u0435\u0440\u0430 \u043f\u0440\u043e\u0444\u0435\u0441\u0456\u0439\u043d\u043e\u0457 \u0434\u0456\u044f\u043b\u044c\u043d\u043e\u0441\u0442\u0456",
@@ -351,10 +343,6 @@
   },
   {
    "fieldname": "column_break_bley",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "column_break_hqmy",
    "fieldtype": "Column Break"
   },
   {
@@ -387,13 +375,94 @@
    "fieldname": "personal_data_consent",
    "fieldtype": "Check",
    "label": "\u0417\u0433\u043e\u0434\u0430 \u043d\u0430 \u043e\u0431\u0440\u043e\u0431\u043a\u0443 \u0434\u0430\u043d\u0438\u0445"
+  },
+  {
+   "fieldname": "\u0456\u043d\u0444\u043e\u0440\u043c\u0430\u0446\u0456\u044f_\u0432\u043f\u043e_tab",
+   "fieldtype": "Tab Break",
+   "label": "\u0406\u043d\u0444\u043e\u0440\u043c\u0430\u0446\u0456\u044f \u0412\u041f\u041e"
+  },
+  {
+   "fieldname": "column_break_tyqa",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "\u0430\u0434\u0440\u0435\u0441\u0438_tab",
+   "fieldtype": "Tab Break",
+   "label": "\u0410\u0434\u0440\u0435\u0441\u0438"
+  },
+  {
+   "fieldname": "\u0441\u043e\u0446\u0456\u0430\u043b\u044c\u043d\u0430_\u0456\u043d\u0444\u043e\u0440\u043c\u0430\u0446\u0456\u044f_tab",
+   "fieldtype": "Tab Break",
+   "label": "\u0421\u043e\u0446\u0456\u0430\u043b\u044c\u043d\u0430 \u0456\u043d\u0444\u043e\u0440\u043c\u0430\u0446\u0456\u044f"
+  },
+  {
+   "fieldname": "\u043e\u0441\u0432\u0456\u0442\u0430_\u0442\u0430_\u0437\u0430\u0439\u043d\u044f\u0442\u0456\u0441\u0442\u044c_section",
+   "fieldtype": "Section Break",
+   "label": "\u041e\u0441\u0432\u0456\u0442\u0430 \u0442\u0430 \u0437\u0430\u0439\u043d\u044f\u0442\u0456\u0441\u0442\u044c"
+  },
+  {
+   "fieldname": "column_break_hqiq",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_ghpe",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_mvsw",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "\u0441\u043b\u0443\u0436\u0431\u043e\u0432\u0430_\u0456\u043d\u0444\u043e\u0440\u043c\u0430\u0446\u0456\u044f_tab",
+   "fieldtype": "Tab Break",
+   "label": "\u0421\u043b\u0443\u0436\u0431\u043e\u0432\u0430 \u0456\u043d\u0444\u043e\u0440\u043c\u0430\u0446\u0456\u044f"
+  },
+  {
+   "fieldname": "\u0440\u043e\u0434\u0438\u043d\u0430_tab",
+   "fieldtype": "Tab Break",
+   "label": "\u0420\u043e\u0434\u0438\u043d\u0430"
+  },
+  {
+   "fieldname": "family",
+   "fieldtype": "Link",
+   "label": "\u0421\u0456\u043c'\u044f",
+   "options": "IDP Family"
+  },
+  {
+   "fieldname": "section_break_ouzu",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "family_info_html",
+   "fieldtype": "HTML",
+   "label": "\u0406\u043d\u0444\u043e\u0440\u043c\u0430\u0446\u0456\u044f \u043f\u0440\u043e \u0440\u043e\u0434\u0438\u043d\u0443"
+  },
+  {
+   "fieldname": "section_break_shbi",
+   "fieldtype": "Section Break",
+   "label": "\u0414\u043e\u043a\u0443\u043c\u0435\u043d\u0442"
+  },
+  {
+   "fieldname": "document",
+   "fieldtype": "Data",
+   "label": "\u0414\u043e\u043a\u0443\u043c\u0435\u043d\u0442"
+  },
+  {
+   "fieldname": "document_type",
+   "fieldtype": "Select",
+   "label": "\u0422\u0438\u043f \u0434\u043e\u043a\u0443\u043c\u0435\u043d\u0442\u0430",
+   "options": "\u041f\u0430\u0441\u043f\u043e\u0440\u0442\nID-\u043a\u0430\u0440\u0442\u043a\u0430\n\u0421\u0432\u0456\u0434\u043e\u0446\u0442\u0432\u043e \u043f\u0440\u043e \u043d\u0430\u0440\u043e\u0434\u0436\u0435\u043d\u043d\u044f\n\u0406\u043d\u0448\u0435"
+  },
+  {
+   "fieldname": "column_break_mwmp",
+   "fieldtype": "Column Break"
   }
  ],
  "grid_page_length": 50,
  "image_field": "photo",
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-09-02 14:01:20.588393",
+ "modified": "2025-09-05 12:41:03.150037",
  "modified_by": "Administrator",
  "module": "Melita Idp",
  "name": "IDP Beneficiary",
@@ -418,6 +487,23 @@
  "show_title_field_in_link": 1,
  "sort_field": "creation",
  "sort_order": "DESC",
- "states": [],
+ "states": [
+  {
+   "color": "Green",
+   "title": "\u0410\u043a\u0442\u0438\u0432\u043d\u0438\u0439"
+  },
+  {
+   "color": "Purple",
+   "title": "\u041f\u0435\u0440\u0435\u043c\u0456\u0441\u0442\u0438\u0432\u0441\u044f"
+  },
+  {
+   "color": "Light Blue",
+   "title": "\u0417\u043d\u044f\u0442\u043e \u0437 \u043e\u0431\u043b\u0456\u043a\u0443"
+  },
+  {
+   "color": "Gray",
+   "title": "\u041f\u043e\u043c\u0435\u0440"
+  }
+ ],
  "title_field": "full_name"
 }

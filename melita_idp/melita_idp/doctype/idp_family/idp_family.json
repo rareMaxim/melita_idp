@@ -1,11 +1,11 @@
 {
  "actions": [],
  "allow_rename": 1,
+ "autoname": "hash",
  "creation": "2025-08-28 12:20:09.978676",
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
-  "family_name",
   "head_of_family",
   "in_difficult_life_circumstances",
   "lives_in_mkp",
@@ -13,14 +13,9 @@
  ],
  "fields": [
   {
-   "fieldname": "family_name",
-   "fieldtype": "Data",
-   "label": "\u041d\u0430\u0437\u0432\u0430 \u0440\u043e\u0434\u0438\u043d\u0438 (\u041f\u0406\u0411 \u0433\u043e\u043b\u043e\u0432\u0438)"
-  },
-  {
    "fieldname": "head_of_family",
    "fieldtype": "Link",
-   "label": "\u041a\u043e\u043d\u0442\u0430\u043a\u0442\u043d\u0430 \u043e\u0441\u043e\u0431\u0430 \u0432\u0456\u0434 \u0440\u043e\u0434\u0438\u043d\u0438",
+   "label": "\u0413\u043e\u043b\u043e\u0432\u0430 \u0440\u043e\u0434\u0438\u043d\u0438",
    "options": "IDP Beneficiary"
   },
   {
@@ -34,7 +29,7 @@
    "fieldname": "family_members",
    "fieldtype": "Table",
    "label": "\u0427\u043b\u0435\u043d\u0438 \u0440\u043e\u0434\u0438\u043d\u0438",
-   "options": "IDP Family Table"
+   "options": "IDP Family Member Item"
   },
   {
    "default": "0",
@@ -47,10 +42,11 @@
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-09-02 13:52:56.531737",
+ "modified": "2025-09-02 16:08:30.043621",
  "modified_by": "Administrator",
  "module": "Melita Idp",
  "name": "IDP Family",
+ "naming_rule": "Random",
  "owner": "Administrator",
  "permissions": [
   {
@@ -67,7 +63,9 @@
   }
  ],
  "row_format": "Dynamic",
+ "show_title_field_in_link": 1,
  "sort_field": "creation",
  "sort_order": "DESC",
- "states": []
+ "states": [],
+ "title_field": "head_of_family"
 }

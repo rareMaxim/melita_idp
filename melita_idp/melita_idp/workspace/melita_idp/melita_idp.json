@@ -1,7 +1,7 @@
 {
  "app": "melita_idp",
  "charts": [],
- "content": "[{\"id\":\"82DnMUVT6M\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Melita IDP</span>\",\"col\":12}},{\"id\":\"_nn2ZQX6DD\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"\u0417\u0430\u044f\u0432\u043d\u0438\u043a\u0438\",\"col\":3}},{\"id\":\"alDmvLJ9RY\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"\u0414\u043e\u043f\u043e\u043c\u043e\u0433\u0430\",\"col\":3}}]",
+ "content": "[{\"id\":\"82DnMUVT6M\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Melita IDP</span>\",\"col\":12}},{\"id\":\"_nn2ZQX6DD\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"\u0417\u0430\u044f\u0432\u043d\u0438\u043a\u0438\",\"col\":3}},{\"id\":\"alDmvLJ9RY\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"\u0414\u043e\u043f\u043e\u043c\u043e\u0433\u0430\",\"col\":3}},{\"id\":\"muEN86dCIx\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"\u0420\u043e\u0434\u0438\u043d\u0438\",\"col\":3}},{\"id\":\"FJTU45-C1y\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"nBeV8oWW4b\",\"type\":\"card\",\"data\":{\"card_name\":\"\u0414\u043e\u0432\u0456\u0434\u043d\u0438\u043a\u0438\",\"col\":4}}]",
  "creation": "2025-08-14 10:38:12.200226",
  "custom_blocks": [],
  "docstatus": 0,
@@ -14,8 +14,28 @@
  "is_hidden": 0,
  "label": "Melita IDP",
  "link_type": "DocType",
- "links": [],
- "modified": "2025-08-14 10:40:30.685284",
+ "links": [
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "\u0414\u043e\u0432\u0456\u0434\u043d\u0438\u043a\u0438",
+   "link_count": 1,
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "\u0426\u0435\u043d\u0442\u0440\u0438",
+   "link_count": 0,
+   "link_to": "IDP Support Center",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  }
+ ],
+ "modified": "2025-09-05 12:46:55.434959",
  "modified_by": "Administrator",
  "module": "Melita Idp",
  "name": "Melita IDP",
@@ -32,6 +52,14 @@
    "doc_view": "List",
    "label": "\u0417\u0430\u044f\u0432\u043d\u0438\u043a\u0438",
    "link_to": "IDP Beneficiary",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
+   "color": "Cyan",
+   "doc_view": "List",
+   "label": "\u0420\u043e\u0434\u0438\u043d\u0438",
+   "link_to": "IDP Family",
    "stats_filter": "[]",
    "type": "DocType"
   },

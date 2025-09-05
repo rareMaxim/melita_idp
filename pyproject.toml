@@ -1,8 +1,6 @@
 [project]
 name = "melita_idp"
-authors = [
-    { name = "Maxim S", email = "maks4a@gmail.com"}
-]
+authors = [{ name = "Maxim S", email = "maks4a@gmail.com" }]
 description = "Internally displaced persons"
 requires-python = ">=3.10"
 readme = "README.md"
@@ -24,29 +22,55 @@ line-length = 110
 target-version = "py310"
 
 [tool.ruff.lint]
-select = [
-    "F",
-    "E",
-    "W",
-    "I",
-    "UP",
-    "B",
-    "RUF",
+allowed-confusables = [
+    "а",
+    "А",
+    "б",
+    "Б",
+    "в",
+    "В",
+    "г",
+    "Г",
+    "е",
+    "Е",
+    "з",
+    "З",
+    "и",
+    "И",
+    "к",
+    "К",
+    "м",
+    "М",
+    "н",
+    "Н",
+    "о",
+    "О",
+    "р",
+    "Р",
+    "с",
+    "С",
+    "у",
+    "У",
+    "ф",
+    "Ф",
+    "х",
+    "Х",
 ]
+select = ["F", "E", "W", "I", "UP", "B", "RUF"]
 ignore = [
-    "B017", # assertRaises(Exception) - should be more specific
-    "B018", # useless expression, not assigned to anything
-    "B023", # function doesn't bind loop variable - will have last iteration's value
-    "B904", # raise inside except without from
-    "E101", # indentation contains mixed spaces and tabs
-    "E402", # module level import not at top of file
-    "E501", # line too long
-    "E741", # ambiguous variable name
-    "F401", # "unused" imports
-    "F403", # can't detect undefined names from * import
-    "F405", # can't detect undefined names from * import
-    "F722", # syntax error in forward type annotation
-    "W191", # indentation contains tabs
+    "B017",  # assertRaises(Exception) - should be more specific
+    "B018",  # useless expression, not assigned to anything
+    "B023",  # function doesn't bind loop variable - will have last iteration's value
+    "B904",  # raise inside except without from
+    "E101",  # indentation contains mixed spaces and tabs
+    "E402",  # module level import not at top of file
+    "E501",  # line too long
+    "E741",  # ambiguous variable name
+    "F401",  # "unused" imports
+    "F403",  # can't detect undefined names from * import
+    "F405",  # can't detect undefined names from * import
+    "F722",  # syntax error in forward type annotation
+    "W191",  # indentation contains tabs
     "UP030", # Use implicit references for positional format fields (translations)
     "UP031", # Use format specifiers instead of percent format
     "UP032", # Use f-string instead of `format` call (translations)
