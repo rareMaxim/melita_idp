@@ -49,7 +49,6 @@ class IDPBeneficiary(Document):
 			"\u0411\u0435\u0437\u0440\u043e\u0431\u0456\u0442\u043d\u0438\u0439",
 			"\u0415\u043a\u043e\u043d\u043e\u043c\u0456\u0447\u043d\u043e \u043d\u0435\u0430\u043a\u0442\u0438\u0432\u043d\u0438\u0439",
 		]
-		family: DF.Link | None
 		first_name: DF.Data
 		full_name: DF.Data | None
 		gender: DF.Literal[
