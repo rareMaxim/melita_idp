@@ -4,9 +4,26 @@
 frappe.ui.form.on("IDP Beneficiary", {
 	refresh(frm) {
 		updateBirthDayAndGenre(frm);
+		addFamilyButtons(frm);
+		updateFamilyMembersDisplay(frm);
 	},
 	tax_id(frm) {
 		updateBirthDayAndGenre(frm);
+	},
+	onload(frm) {
+		// Якщо це новий документ з переданими параметрами для члена сім'ї
+		if (frm.is_new() && frappe.route_options) {
+			fillFamilyMemberData(frm);
+		}
+	},
+	after_save(frm) {
+		// Оновлюємо відображення членів сім'ї після збереження
+		updateFamilyMembersDisplay(frm);
+
+		// Якщо це новий член сім'ї, додаємо його до сім'ї
+		if (frm.doc.temp_relationship && frm.doc.idp_family) {
+			addMemberToFamily(frm);
+		}
 	},
 });
 
@@ -27,7 +44,7 @@ function updateBirthDayAndGenre(frm) {
 					message: "Невірно введенний РНОКПП",
 					indicator: "orange",
 				},
-				5
+				5,
 			);
 			return;
 		}
@@ -40,7 +57,7 @@ function updateBirthDayAndGenre(frm) {
 					message: "Дата народження не відповідає РНОКПП",
 					indicator: "orange",
 				},
-				5
+				5,
 			);
 		} else if (!frm.doc.date_of_birth) {
 			frm.set_value("date_of_birth", data.birthday);
@@ -49,7 +66,7 @@ function updateBirthDayAndGenre(frm) {
 					message: "Встановлено день народження з РНОКПП",
 					indicator: "blue",
 				},
-				5
+				5,
 			);
 		}
 		if (frm.doc.gender) {
@@ -60,18 +77,236 @@ function updateBirthDayAndGenre(frm) {
 						message: "Стать не відповідає РНОКПП",
 						indicator: "orange",
 					},
-					5
+					5,
 				);
 			return;
 		} else if (!frm.doc.gender) {
-			frm.set_value("gender", data.gender == "Female" ? "Жіноча" : "Чоловіча");
+			frm.set_value(
+				"gender",
+				data.gender == "Female" ? "Жіноча" : "Чоловіча",
+			);
 			frappe.show_alert(
 				{
 					message: "Встановлено стать з РНОКПП",
 					indicator: "blue",
 				},
-				5
+				5,
 			);
 		}
+	});
+}
+
+function addFamilyButtons(frm) {
+	// Видаляємо старі кнопки якщо вони є
+	frm.page.clear_secondary_action();
+
+	if (!frm.doc.__islocal && frm.doc.idp_family) {
+		// Кнопка для додавання нового члена сім'ї
+		frm.add_custom_button(
+			__("Додати члена сім'ї"),
+			function () {
+				addNewFamilyMember(frm);
+			},
+			__("Сім'я"),
+		);
+
+		// Кнопка для переходу до сім'ї
+		frm.add_custom_button(
+			__("Переглянути сім'ю"),
+			function () {
+				frappe.set_route("Form", "IDP Family", frm.doc.idp_family);
+			},
+			__("Сім'я"),
+		);
+
+		// Перевіряємо, чи це голова сім'ї
+		frappe.call({
+			method: "melita_idp.melita_idp.doctype.idp_family.idp_family.get_family_head",
+			args: {
+				family_id: frm.doc.idp_family,
+			},
+			callback: function (r) {
+				if (r.message && r.message !== frm.doc.name) {
+					// Якщо це не голова сім'ї, додаємо кнопку переходу до голови
+					frm.add_custom_button(
+						__("Перейти до голови сім'ї"),
+						function () {
+							frappe.set_route(
+								"Form",
+								"IDP Beneficiary",
+								r.message,
+							);
+						},
+						__("Сім'я"),
+					);
+				}
+			},
+		});
+	}
+}
+
+function addNewFamilyMember(frm) {
+	frappe.call({
+		method: "melita_idp.melita_idp.doctype.idp_beneficiary.idp_beneficiary.get_family_common_fields",
+		args: {
+			family_id: frm.doc.idp_family,
+		},
+		callback: function (r) {
+			if (r.message) {
+				// Додаємо ідентифікатор сім'ї до спільних даних
+				r.message.idp_family = frm.doc.idp_family;
+				r.message.temp_relationship = "Член сім'ї";
+
+				// Зберігаємо дані в route_options для передачі в нову форму
+				frappe.route_options = r.message;
+
+				// Переходимо до нової форми створення бенефіціара
+				frappe.new_doc("IDP Beneficiary");
+			}
+		},
+	});
+}
+
+function fillFamilyMemberData(frm) {
+	// Заповнюємо поля новими даними з route_options
+	if (frappe.route_options) {
+		Object.keys(frappe.route_options).forEach(function (key) {
+			if (frappe.route_options[key] && frm.fields_dict[key]) {
+				frm.set_value(key, frappe.route_options[key]);
+			}
+		});
+
+		// Показуємо повідомлення
+		frappe.show_alert(
+			{
+				message: "Заповнено спільні поля для члена сім'ї",
+				indicator: "blue",
+			},
+			3,
+		);
+
+		// Очищаємо route_options
+		frappe.route_options = null;
+	}
+}
+
+function addMemberToFamily(frm) {
+	let family_doc = frappe.get_doc("IDP Family", frm.doc.idp_family);
+	// Перевіряємо, чи не є вже цей бенефіціар членом сім'ї
+	let already_member = family_doc.family_members.some(function (member) {
+		return member.member === frm.doc.name;
+	});
+
+	if (!already_member) {
+		// Показуємо діалог вибору ролі в сім'ї
+		showRelationshipDialog(frm, family_doc);
+	} else {
+		// Очищаємо тимчасове поле
+		frm.set_value("temp_relationship", "");
+	}
+}
+
+function showRelationshipDialog(frm, family_doc) {
+	let d = new frappe.ui.Dialog({
+		title: "Виберіть роль в сім'ї",
+		fields: [
+			{
+				label: "Роль в сім'ї",
+				fieldname: "relationship",
+				fieldtype: "Select",
+				options: [
+					"Чоловік/Дружина",
+					"Син/Донька",
+					"Батько/Мати",
+					"Брат/Сестра",
+					"Дідусь/Бабуся",
+					"Онук/Онучка",
+					"Інший родич",
+					"Опікуваний",
+				].join("\n"),
+				reqd: 1,
+				default: "Член сім'ї",
+			},
+		],
+		primary_action_label: "Додати до сім'ї",
+		primary_action(values) {
+			// Додаємо нового члена до сім'ї
+			family_doc.family_members.push({
+				member: frm.doc.name,
+				relationship: values.relationship,
+			});
+
+			// Зберігаємо оновлену сім'ю
+			frappe.call({
+				method: "frappe.client.save",
+				args: {
+					doc: family_doc,
+				},
+				callback: function (r) {
+					if (r.message) {
+						frappe.show_alert(
+							{
+								message:
+									"Додано до сім'ї як " + values.relationship,
+								indicator: "green",
+							},
+							3,
+						);
+
+						// Очищаємо тимчасове поле
+						frm.set_value("temp_relationship", "");
+						frm.save();
+
+						// Оновлюємо відображення
+						updateFamilyMembersDisplay(frm);
+					}
+				},
+			});
+
+			d.hide();
+		},
+	});
+
+	d.show();
+}
+
+function updateFamilyMembersDisplay(frm) {
+	if (!frm.doc.idp_family) {
+		return;
+	}
+
+	// Отримуємо дані сім'ї та оновлюємо таблицю відображення
+	let familly = frappe.get_doc("IDP Family", frm.doc.idp_family);
+	if (!familly || !familly.family_members) {
+		return;
+	}
+
+	// Очищаємо поточну таблицю відображення
+	frm.clear_table("family_members_display");
+
+	// Заповнюємо таблицю даними з сім'ї
+	familly.family_members.forEach(function (member) {
+		// Отримуємо повну інформацію про кожного члена
+		frappe.call({
+			method: "frappe.client.get_value",
+			args: {
+				doctype: "IDP Beneficiary",
+				filters: { name: member.member },
+				fieldname: ["full_name", "phone", "age", "gender"],
+			},
+			callback: function (member_r) {
+				if (member_r.message) {
+					let row = frm.add_child("family_members_display");
+					row.member = member.member;
+					row.relationship = member.relationship;
+					row.member_name = member_r.message.full_name;
+					row.phone = member_r.message.phone;
+					row.age = member_r.message.age;
+					row.gender = member_r.message.gender;
+
+					frm.refresh_field("family_members_display");
+				}
+			},
+		});
 	});
 }

@@ -67,14 +67,14 @@
   "section_consent_signature",
   "personal_data_consent",
   "electronic_signature",
+  "family_tab",
+  "idp_family",
+  "family_members_display",
   "\u0441\u043b\u0443\u0436\u0431\u043e\u0432\u0430_\u0456\u043d\u0444\u043e\u0440\u043c\u0430\u0446\u0456\u044f_tab",
   "full_name",
   "age",
   "photo",
-  "temp_relationship",
-  "tab_7_tab",
-  "idp_family",
-  "family_members_display"
+  "temp_relationship"
  ],
  "fields": [
   {
@@ -435,11 +435,6 @@
    "fieldtype": "Column Break"
   },
   {
-   "fieldname": "tab_7_tab",
-   "fieldtype": "Tab Break",
-   "label": "Tab 7"
-  },
-  {
    "fieldname": "idp_family",
    "fieldtype": "Link",
    "label": "\u0421\u0456\u043c'\u044f \u0412\u041f\u041e",
@@ -456,13 +451,18 @@
    "fieldname": "temp_relationship",
    "fieldtype": "Data",
    "label": "temp_relationship"
+  },
+  {
+   "fieldname": "family_tab",
+   "fieldtype": "Tab Break",
+   "label": "\u0421\u0456\u043c'\u044f"
   }
  ],
  "grid_page_length": 50,
  "image_field": "photo",
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-09-05 15:56:23.350899",
+ "modified": "2025-09-07 13:17:29.899338",
  "modified_by": "Administrator",
  "module": "Melita Idp",
  "name": "IDP Beneficiary",

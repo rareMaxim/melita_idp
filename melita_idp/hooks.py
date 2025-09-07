@@ -121,7 +121,8 @@ app_license = "mit"
 # Permissions evaluated in scripted ways
 
 # permission_query_conditions = {
-# 	"Event": "frappe.desk.doctype.event.event.get_permission_query_conditions",
+# 	"IDP Family": "melita_idp.melita_idp.utils.permissions.get_family_permission_query_conditions",
+# 	"IDP Beneficiary": "melita_idp.melita_idp.utils.permissions.get_beneficiary_permission_query_conditions",
 # }
 #
 # has_permission = {
@@ -140,6 +141,22 @@ app_license = "mit"
 # 	}
 # }
 
+
+# Документні хуки
+doc_events = {
+	"IDP Beneficiary": {
+		"after_insert": "melita_idp.melita_idp.utils.family_utils.after_insert_beneficiary_hook",
+		"on_update": "melita_idp.melita_idp.utils.family_utils.sync_beneficiary_changes",
+		"before_rename": "melita_idp.melita_idp.utils.family_utils.handle_beneficiary_rename",
+		"on_trash": "melita_idp.melita_idp.utils.family_utils.handle_beneficiary_deletion",
+	},
+	"IDP Family": {
+		"on_update": "melita_idp.melita_idp.utils.family_utils.handle_family_update",
+		"on_trash": "melita_idp.melita_idp.utils.family_utils.handle_family_deletion",
+		"validate": "melita_idp.melita_idp.utils.family_utils.validate_family_structure_hook",
+	},
+}
+
 # Scheduled Tasks
 # ---------------
 
@@ -151,9 +168,7 @@ scheduler_events = {
 	# 	"hourly": [
 	# 		"melita_idp.tasks.hourly"
 	# 	],
-	# 	"weekly": [
-	# 		"melita_idp.tasks.weekly"
-	# 	],
+	"weekly": ["melita_idp.melita_idp.utils.family_utils.cleanup_empty_families"],
 	# 	"monthly": [
 	# 		"melita_idp.tasks.monthly"
 	# 	],
@@ -233,4 +248,10 @@ export_python_type_annotations = True
 
 default_log_clearing_doctypes = {
 	"Logging DocType Name": 30  # days to retain logs
+}
+
+
+# Налаштування для пошуку
+global_search_doctypes = {
+	"IDP Beneficiary": [{"doctype": "IDP Beneficiary", "index": 1}, {"doctype": "IDP Family", "index": 2}]
 }

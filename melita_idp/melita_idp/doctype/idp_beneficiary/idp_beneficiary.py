@@ -95,6 +95,12 @@ class IDPBeneficiary(Document):
 		"""Виконується перед збереженням."""
 		self.update_full_name()
 
+	def after_insert(self):
+		"""Виконується після створення нового запису."""
+		# Якщо це новий бенефіціар і у нього ще немає сім'ї, створюємо нову
+		if not self.idp_family:
+			self.create_family_and_add_as_head()
+
 	def update_full_name(self):
 		self.full_name = f"{self.last_name or ''} {self.first_name or ''} {self.middle_name or ''}".strip()
 
@@ -104,6 +110,52 @@ class IDPBeneficiary(Document):
 			self.age = age
 		else:
 			self.age = 0
+
+	def create_family_and_add_as_head(self):
+		"""Створює нову сім'ю ВПО та додає поточного бенефіціара як голову сім'ї."""
+		try:
+			# Створюємо новий документ сім'ї
+			family_doc = frappe.new_doc("IDP Family")
+
+			# Заповнюємо базові дані сім'ї
+			family_doc.origin_address = self.origin_region
+			family_doc.current_address = self.current_region
+
+			# Додаємо поточного бенефіціара як голову сім'ї
+			family_doc.append("family_members", {"member": self.name, "relationship": "Голова"})
+
+			# Зберігаємо сім'ю
+			family_doc.insert(ignore_permissions=True)
+
+			# Оновлюємо поле idp_family у поточного бенефіціара
+			frappe.db.set_value(
+				"IDP Beneficiary", self.name, "idp_family", family_doc.name, update_modified=False
+			)
+
+			# Оновлюємо також поточний об'єкт
+			self.idp_family = family_doc.name
+
+			frappe.msgprint(f"Автоматично створена сім'я: {family_doc.name}")
+
+		except Exception as e:
+			frappe.log_error(f"Помилка при створенні сім'ї для {self.name}: {e!s}")
+
+	def get_family_head(self):
+		"""Повертає голову сім'ї для поточного бенефіціара."""
+		if not self.idp_family:
+			return None
+
+		# Знаходимо голову сім'ї
+		family_doc = frappe.get_doc("IDP Family", self.idp_family)
+		for member in family_doc.family_members:
+			if member.relationship == "Голова":
+				return member.member
+		return None
+
+	def is_family_head(self):
+		"""Перевіряє, чи є поточний бенефіціар головою сім'ї."""
+		family_head = self.get_family_head()
+		return family_head == self.name if family_head else False
 
 
 def update_beneficiary_age():
@@ -123,3 +175,67 @@ def calculate_age(birthdate):
 		- ((today_date.month, today_date.day) < (birthdate.month, birthdate.day))
 	)
 	return age
+
+
+@frappe.whitelist()
+def add_family_member(family_id, origin_beneficiary_id):
+	"""
+	Повертає дані для створення нового члена сім'ї з заповненими спільними полями.
+	"""
+	try:
+		# Отримуємо дані сім'ї
+		family_doc = frappe.get_doc("IDP Family", family_id)
+		origin_beneficiary = frappe.get_doc("IDP Beneficiary", origin_beneficiary_id)
+
+		# Підготовлюємо дані для нового бенефіціара
+		shared_data = {
+			"origin_region": family_doc.origin_address,
+			"current_region": family_doc.current_address,
+			"current_address": origin_beneficiary.current_address,
+			"displacement_date": origin_beneficiary.displacement_date,
+			"displacement_status": origin_beneficiary.displacement_status,
+			"registration_center": origin_beneficiary.registration_center,
+			"idp_family": family_id,
+			"temp_relationship": "Член сім'ї",  # Тимчасове поле для збереження ролі
+		}
+
+		return shared_data
+
+	except Exception as e:
+		frappe.throw(f"Помилка при підготовці даних для нового члена сім'ї: {e!s}")
+
+
+@frappe.whitelist()
+def get_family_common_fields(family_id):
+	"""
+	Повертає спільні поля для членів сім'ї.
+	"""
+	try:
+		family_doc = frappe.get_doc("IDP Family", family_id)
+
+		# Знаходимо голову сім'ї для отримання додаткових даних
+		head_member = None
+		for member in family_doc.family_members:
+			if member.relationship == "Голова":
+				head_member = frappe.get_doc("IDP Beneficiary", member.member)
+				break
+
+		common_fields = {
+			"origin_region": family_doc.origin_address,
+			"current_region": family_doc.current_address,
+		}
+
+		if head_member:
+			common_fields.update(
+				{
+					"current_address": head_member.current_address,
+					"displacement_date": head_member.displacement_date,
+					"displacement_status": head_member.displacement_status,
+					"registration_center": head_member.registration_center,
+				}
+			)
+
+		return common_fields
+
+	except Exception as e:
+		frappe.throw(f"Помилка при отриманні спільних полів сім'ї: {e!s}")
