@@ -283,27 +283,6 @@ def get_available_beneficiaries_for_family(family_id=None):
 # Хук-функції для автоматичної обробки подій
 
 
-def sync_beneficiary_changes(doc, method):
-	"""
-	Хук, який виконується при оновленні бенефіціара.
-	Синхронізує зміни з членами сім'ї якщо це голова сім'ї.
-	"""
-	if doc.idp_family and doc.is_family_head():
-		try:
-			family_doc = frappe.get_doc("IDP Family", doc.idp_family)
-
-			# Оновлюємо адреси сім'ї
-			if doc.origin_region != family_doc.origin_address:
-				family_doc.origin_address = doc.origin_region
-			if doc.current_region != family_doc.current_address:
-				family_doc.current_address = doc.current_region
-
-			family_doc.save()
-
-		except Exception as e:
-			frappe.log_error(f"Помилка синхронізації змін бенефіціара {doc.name}: {e!s}")
-
-
 def handle_beneficiary_rename(doc, method, old_name, new_name, merge=False):
 	"""
 	Хук для обробки перейменування бенефіціара.
@@ -415,18 +394,6 @@ def cleanup_empty_families():
 
 	except Exception as e:
 		frappe.log_error(f"Помилка очищення порожніх сімей: {e!s}")
-
-
-def after_insert_beneficiary_hook(doc, method):
-	"""
-	Хук після створення нового бенефіціара.
-	Викликає створення сім'ї якщо потрібно.
-	"""
-	try:
-		# Цей хук буде викликаний після after_insert у самому документі
-		pass
-	except Exception as e:
-		frappe.log_error(f"Помилка в хуку після створення бенефіціара {doc.name}: {e!s}")
 
 
 # Додаткові API методи

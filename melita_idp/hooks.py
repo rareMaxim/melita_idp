@@ -145,8 +145,6 @@ app_license = "mit"
 # Документні хуки
 doc_events = {
 	"IDP Beneficiary": {
-		"after_insert": "melita_idp.melita_idp.utils.family_utils.after_insert_beneficiary_hook",
-		"on_update": "melita_idp.melita_idp.utils.family_utils.sync_beneficiary_changes",
 		"before_rename": "melita_idp.melita_idp.utils.family_utils.handle_beneficiary_rename",
 		"on_trash": "melita_idp.melita_idp.utils.family_utils.handle_beneficiary_deletion",
 	},

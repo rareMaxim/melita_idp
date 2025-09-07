@@ -5,7 +5,8 @@ frappe.ui.form.on("IDP Beneficiary", {
 	refresh(frm) {
 		updateBirthDayAndGenre(frm);
 		addFamilyButtons(frm);
-		updateFamilyMembersDisplay(frm);
+		render_family_members(frm);
+		// frm.dirty(false); // Скидаємо "брудний" стан форми після оновлення відображення сім'ї
 	},
 	tax_id(frm) {
 		updateBirthDayAndGenre(frm);
@@ -16,10 +17,10 @@ frappe.ui.form.on("IDP Beneficiary", {
 			fillFamilyMemberData(frm);
 		}
 	},
+	idp_family(frm) {
+		render_family_members(frm);
+	},
 	after_save(frm) {
-		// Оновлюємо відображення членів сім'ї після збереження
-		updateFamilyMembersDisplay(frm);
-
 		// Якщо це новий член сім'ї, додаємо його до сім'ї
 		if (frm.doc.temp_relationship && frm.doc.idp_family) {
 			addMemberToFamily(frm);
@@ -258,7 +259,7 @@ function showRelationshipDialog(frm, family_doc) {
 						frm.save();
 
 						// Оновлюємо відображення
-						updateFamilyMembersDisplay(frm);
+						render_family_members(frm);
 					}
 				},
 			});
@@ -270,43 +271,66 @@ function showRelationshipDialog(frm, family_doc) {
 	d.show();
 }
 
-function updateFamilyMembersDisplay(frm) {
-	if (!frm.doc.idp_family) {
+function render_family_members(frm) {
+	// Перевіряємо, чи є поле `family_members_html` та ID сім'ї
+	if (!frm.fields_dict["family_members_html"] || !frm.doc.idp_family) {
+		// Якщо немає, очищуємо поле і виходимо
+		if (frm.fields_dict["family_members_html"]) {
+			$(frm.fields_dict["family_members_html"].wrapper).html(
+				"<p>Сім'я не вказана.</p>",
+			);
+		}
 		return;
 	}
 
-	// Отримуємо дані сім'ї та оновлюємо таблицю відображення
-	let familly = frappe.get_doc("IDP Family", frm.doc.idp_family);
-	if (!familly || !familly.family_members) {
-		return;
-	}
+	// Показуємо індикатор завантаження
+	$(frm.fields_dict["family_members_html"].wrapper).html(
+		"<p>Завантаження даних сім'ї...</p>",
+	);
 
-	// Очищаємо поточну таблицю відображення
-	frm.clear_table("family_members_display");
+	// Викликаємо наш новий серверний метод
+	frappe.call({
+		method: "melita_idp.melita_idp.doctype.idp_beneficiary.idp_beneficiary.get_family_members_data",
+		args: {
+			family_id: frm.doc.idp_family,
+		},
+		callback: function (r) {
+			let family_members = r.message;
+			let html_content = "";
 
-	// Заповнюємо таблицю даними з сім'ї
-	familly.family_members.forEach(function (member) {
-		// Отримуємо повну інформацію про кожного члена
-		frappe.call({
-			method: "frappe.client.get_value",
-			args: {
-				doctype: "IDP Beneficiary",
-				filters: { name: member.member },
-				fieldname: ["full_name", "phone", "age", "gender"],
-			},
-			callback: function (member_r) {
-				if (member_r.message) {
-					let row = frm.add_child("family_members_display");
-					row.member = member.member;
-					row.relationship = member.relationship;
-					row.member_name = member_r.message.full_name;
-					row.phone = member_r.message.phone;
-					row.age = member_r.message.age;
-					row.gender = member_r.message.gender;
+			if (family_members && family_members.length > 0) {
+				html_content = "<div class='family-members-list'>";
+				family_members.forEach(function (member, i) {
+					// Генеруємо HTML-картку для кожного члена сім'ї
+					html_content += `
+						<div class='family-member-card' style='border: 1px solid #eee; padding: 10px; margin-bottom: 10px; border-radius: 5px;'>
+							<h4>${i + 1}. <a href='/app/idp-beneficiary/${member.name}'>${member.full_name || member.name}</a> (${member.relationship})</h4>
+							<p><strong>Телефон:</strong> ${member.phone || "Не вказано"}</p>
+							<p><strong>Вік:</strong> ${member.age || "Не вказано"}</p>
+							<p><strong>Стать:</strong> ${member.gender || "Не вказано"}</p>
+						</div>
+					`;
+				});
+				html_content += "</div>";
+			} else {
+				html_content =
+					"<p>У цій сім'ї немає зареєстрованих членів.</p>";
+			}
 
-					frm.refresh_field("family_members_display");
-				}
-			},
-		});
+			// !!! Ключовий момент: оновлюємо HTML напряму, не через set_value !!!
+			const field_wrapper = $(
+				frm.fields_dict["family_members_html"].wrapper,
+			);
+			field_wrapper.html(html_content);
+		},
+		error: function (r) {
+			// Обробка помилок
+			const field_wrapper = $(
+				frm.fields_dict["family_members_html"].wrapper,
+			);
+			field_wrapper.html(
+				"<p style='color: red;'>Не вдалося завантажити дані про сім'ю.</p>",
+			);
+		},
 	});
 }

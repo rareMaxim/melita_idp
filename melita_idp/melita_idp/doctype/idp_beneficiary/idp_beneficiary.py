@@ -15,9 +15,6 @@ class IDPBeneficiary(Document):
 	if TYPE_CHECKING:
 		from frappe.types import DF
 
-		from melita_idp.melita_idp.doctype.idp_family_member_item.idp_family_member_item import (
-			IDPFamilyMemberItem,
-		)
 		from melita_idp.melita_idp.doctype.idp_vulnerability_table.idp_vulnerability_table import (
 			IDPVulnerabilityTable,
 		)
@@ -52,7 +49,6 @@ class IDPBeneficiary(Document):
 			"\u0411\u0435\u0437\u0440\u043e\u0431\u0456\u0442\u043d\u0438\u0439",
 			"\u0415\u043a\u043e\u043d\u043e\u043c\u0456\u0447\u043d\u043e \u043d\u0435\u0430\u043a\u0442\u0438\u0432\u043d\u0438\u0439",
 		]
-		family_members_display: DF.Table[IDPFamilyMemberItem]
 		first_name: DF.Data
 		full_name: DF.Data | None
 		gender: DF.Literal[
@@ -94,6 +90,18 @@ class IDPBeneficiary(Document):
 	def before_save(self):
 		"""Виконується перед збереженням."""
 		self.update_full_name()
+		self.update_age()
+		if self.idp_family and self.is_family_head():
+			try:
+				family_doc = frappe.get_doc("IDP Family", self.idp_family)
+				# Оновлюємо адреси сім'ї
+				if self.origin_region != family_doc.origin_address:
+					family_doc.origin_address = self.origin_region
+				if self.current_region != family_doc.current_address:
+					family_doc.current_address = self.current_region
+				family_doc.save()
+			except Exception as e:
+				frappe.log_error(f"Помилка синхронізації змін бенефіціара {self.name}: {e!s}")
 
 	def after_insert(self):
 		"""Виконується після створення нового запису."""
@@ -239,3 +247,49 @@ def get_family_common_fields(family_id):
 
 	except Exception as e:
 		frappe.throw(f"Помилка при отриманні спільних полів сім'ї: {e!s}")
+
+
+@frappe.whitelist()
+def get_family_members_data(family_id):
+	"""
+	Безпечно повертає дані про членів сім'ї для клієнтського скрипту.
+	"""
+	if not family_id:
+		return []
+
+	try:
+		family_doc = frappe.get_doc("IDP Family", family_id)
+		if not family_doc.family_members:
+			return []
+
+		member_names = [member.member for member in family_doc.family_members]
+		if not member_names:
+			return []
+
+		# Отримуємо дані всіх членів одним запитом
+		member_details = frappe.get_all(
+			"IDP Beneficiary",
+			filters={"name": ("in", member_names)},
+			fields=["name", "full_name", "phone", "age", "gender"],
+		)
+		member_map = {doc.name: doc for doc in member_details}
+
+		# Формуємо фінальний список з усіма даними
+		family_data = []
+		for member_link in family_doc.family_members:
+			details = member_map.get(member_link.member)
+			if details:
+				family_data.append(
+					{
+						"name": details.name,
+						"full_name": details.full_name,
+						"relationship": member_link.relationship,
+						"phone": details.phone,
+						"age": details.age,
+						"gender": details.gender,
+					}
+				)
+		return family_data
+	except Exception as e:
+		frappe.log_error(f"Помилка в get_family_members_data для сім'ї {family_id}: {e!s}")
+		return {"error": str(e)}
