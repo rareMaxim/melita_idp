@@ -8,6 +8,9 @@ frappe.ui.form.on("IDP Beneficiary", {
 		render_family_members(frm);
 		// frm.dirty(false); // Скидаємо "брудний" стан форми після оновлення відображення сім'ї
 	},
+	document(frm) {
+		set_document_type(frm);
+	},
 	tax_id(frm) {
 		updateBirthDayAndGenre(frm);
 	},
@@ -333,4 +336,68 @@ function render_family_members(frm) {
 			);
 		},
 	});
+}
+function set_document_type(frm) {
+	let doc_number = frm.doc.document;
+	if (!doc_number) {
+		// Очищуємо тип документа, якщо номер порожній
+		if (frm.doc.document_type) {
+			frm.set_value("document_type", "");
+			frappe.show_alert(
+				{
+					message: __("Тип документа скинуто."),
+					indicator: "orange",
+				},
+				2,
+			);
+		}
+		return;
+	}
+
+	// Переводимо номер документа до верхнього регістру для уніфікації перевірок
+	// і видаляємо зайві пробіли на початку/в кінці
+	doc_number = doc_number.toUpperCase().trim();
+
+	let doc_type = "";
+
+	// 1. Перевірка на ID-картку (формат 00000000-00000)
+	if (/^\d{8}-\d{5}$/.test(doc_number)) {
+		doc_type = "ID-картка";
+	}
+	// 2. Перевірка на паспорт-книжечку (формат дві кириличні літери, потім 6 цифр)
+	// Допускаємо пробіл або його відсутність між серією та номером
+	// Зверніть увагу, що тут ми вже перевели все у верхній регістр
+	else if (/^[А-ЩЬЮЯҐЄІЇ]{2}\s?\d{6}$/.test(doc_number)) {
+		doc_type = "Паспорт";
+	}
+	// 3. Перевірка на свідоцтво про народження (формат I-XX 123456 або І-ХХ 123456)
+	// Римська I (латиниця) АБО Кирилична І (і крапка), дефіс, дві кириличні літери, пробіл, 6 цифр
+	else if (/^[IІА-ЩЬЮЯҐЄІЇ]-[А-ЩЬЮЯҐЄІЇ]{2}\s?\d{6}$/.test(doc_number)) {
+		// Змінено: [IІ]
+		doc_type = "Свідоцтво про народження";
+	}
+
+	// Встановлюємо значення, тільки якщо тип було визначено
+	if (doc_type && frm.doc.document_type !== doc_type) {
+		// Додано перевірку, щоб не оновлювати, якщо вже правильний
+		frm.set_value("document_type", doc_type);
+
+		frappe.show_alert(
+			{
+				message: __("Встановлено тип документа: {0}", [doc_type]),
+				indicator: "green",
+			},
+			2,
+		);
+	} else if (!doc_type && frm.doc.document_type) {
+		// Якщо тип документа не визначено, але раніше був встановлений, скидуємо його
+		frm.set_value("document_type", "");
+		frappe.show_alert(
+			{
+				message: __("Тип документа скинуто (не розпізнано)."),
+				indicator: "orange",
+			},
+			2,
+		);
+	}
 }
