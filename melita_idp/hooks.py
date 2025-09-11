@@ -162,7 +162,7 @@ scheduler_events = {
 	# 	"all": [
 	# 		"melita_idp.tasks.all"
 	# 	],
-	"daily": ["melita_idp.melita_idp.doctype.idp_beneficiary.idp_beneficiary.update_beneficiary_age"],
+	"daily": ["melita_idp.melita_idp.doctype.idp_beneficiary.idp_beneficiary.update_beneficiary"],
 	# 	"hourly": [
 	# 		"melita_idp.tasks.hourly"
 	# 	],

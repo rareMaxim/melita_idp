@@ -4,6 +4,7 @@
 frappe.ui.form.on("IDP Beneficiary", {
 	refresh(frm) {
 		updateBirthDayAndGenre(frm);
+		set_document_type(frm);
 		addFamilyButtons(frm);
 		render_family_members(frm);
 		// frm.dirty(false); // Скидаємо "брудний" стан форми після оновлення відображення сім'ї
@@ -363,7 +364,10 @@ function set_document_type(frm) {
 	// 1. Перевірка на ID-картку (формат 00000000-00000)
 	if (/^\d{8}-\d{5}$/.test(doc_number)) {
 		doc_type = "ID-картка";
+	} else if (/^\d{9}$/.test(doc_number)) {
+		doc_type = "ID-картка";
 	}
+
 	// 2. Перевірка на паспорт-книжечку (формат дві кириличні літери, потім 6 цифр)
 	// Допускаємо пробіл або його відсутність між серією та номером
 	// Зверніть увагу, що тут ми вже перевели все у верхній регістр
