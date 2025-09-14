@@ -193,8 +193,7 @@
    "in_list_view": 1,
    "in_standard_filter": 1,
    "label": "\u0422\u0435\u043b\u0435\u0444\u043e\u043d",
-   "options": "Phone",
-   "unique": 1
+   "options": "Phone"
   },
   {
    "fieldname": "last_name",
@@ -440,8 +439,10 @@
   {
    "fieldname": "idp_family",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "label": "\u0421\u0456\u043c'\u044f \u0412\u041f\u041e",
-   "options": "IDP Family"
+   "options": "IDP Family",
+   "read_only": 1
   },
   {
    "fieldname": "temp_relationship",
@@ -462,8 +463,13 @@
  "grid_page_length": 50,
  "image_field": "photo",
  "index_web_pages_for_search": 1,
- "links": [],
- "modified": "2025-09-13 13:16:02.445304",
+ "links": [
+  {
+   "link_doctype": "IDP Appeal",
+   "link_fieldname": "applicant"
+  }
+ ],
+ "modified": "2025-09-14 19:55:11.217947",
  "modified_by": "Administrator",
  "module": "Melita Idp",
  "name": "IDP Beneficiary",

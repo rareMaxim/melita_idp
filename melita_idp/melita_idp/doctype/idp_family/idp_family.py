@@ -21,6 +21,7 @@ class IDPFamily(Document):
 		current_address: DF.Link | None
 		family_members: DF.Table[IDPFamilyMemberItem]
 		family_summary: DF.Data | None
+		member_count: DF.Int
 		origin_address: DF.Link | None
 	# end: auto-generated types
 
@@ -67,10 +68,10 @@ class IDPFamily(Document):
 			head_full_name = "Невідомий член сім'ї"
 
 		# Рахуємо загальну кількість членів сім'ї
-		member_count = len(self.family_members)
+		self.member_count = len(self.family_members)
 
 		# Формуємо фінальний рядок
-		self.family_summary = f"{head_full_name} ({member_count} осіб)"
+		self.family_summary = f"{head_full_name} ({self.member_count} осіб)"
 
 	def sync_family_data_to_beneficiaries(self):
 		"""

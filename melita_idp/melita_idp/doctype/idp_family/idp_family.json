@@ -9,18 +9,21 @@
   "family_summary",
   "origin_address",
   "current_address",
-  "family_members"
+  "family_members",
+  "member_count"
  ],
  "fields": [
   {
    "fieldname": "origin_address",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "label": "\u0421\u043f\u0456\u043b\u044c\u043d\u0430 \u0430\u0434\u0440\u0435\u0441\u0430 \u043f\u043e\u0445\u043e\u0434\u0436\u0435\u043d\u043d\u044f",
    "options": "KATOTTG"
   },
   {
    "fieldname": "current_address",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "label": "\u041f\u043e\u0442\u043e\u0447\u043d\u0430 \u0430\u0434\u0440\u0435\u0441\u0430 \u043f\u0440\u043e\u0436\u0438\u0432\u0430\u043d\u043d\u044f",
    "options": "KATOTTG"
   },
@@ -36,12 +39,19 @@
    "in_list_view": 1,
    "label": "\u0421\u0456\u043c'\u044f",
    "read_only": 1
+  },
+  {
+   "fieldname": "member_count",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "\u041a\u0456\u043b\u044c\u043a\u0456\u0441\u0442\u044c",
+   "read_only": 1
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-09-05 18:26:45.391906",
+ "modified": "2025-09-14 15:18:13.390396",
  "modified_by": "Administrator",
  "module": "Melita Idp",
  "name": "IDP Family",

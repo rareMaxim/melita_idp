@@ -8,6 +8,7 @@ frappe.ui.form.on("IDP Beneficiary", {
 		set_document_type(frm);
 		addFamilyButtons(frm);
 		render_family_members(frm);
+		addAppealButton(frm);
 	},
 	document(frm) {
 		set_document_type(frm);
@@ -362,6 +363,59 @@ function set_document_type(frm) {
 				indicator: "orange",
 			},
 			2,
+		);
+	}
+}
+
+function addAppealButton(frm) {
+	if (!frm.is_new()) {
+		frm.add_custom_button(
+			__("Створити звернення"),
+			function () {
+				let d = new frappe.ui.Dialog({
+					title: __("Створення звернення"),
+					fields: [
+						{
+							label: __("Категорія послуги"),
+							fieldname: "service_category",
+							fieldtype: "Link",
+							options: "IDP Service Category",
+							reqd: 1,
+							onchange: () => {
+								d.get_field("service_name").set_value("");
+							},
+						},
+						{
+							label: __("Послуга"),
+							fieldname: "service_name",
+							fieldtype: "Link",
+							options: "IDP Service",
+							reqd: 1,
+							get_query: () => {
+								return {
+									filters: {
+										category:
+											d.get_value("service_category"),
+										enabled: 1,
+									},
+								};
+							},
+						},
+					],
+					primary_action_label: __("Створити"),
+					primary_action: (values) => {
+						frappe.new_doc("IDP Appeal", {
+							applicant: frm.doc.name,
+							family: frm.doc.idp_family,
+							support_center: frm.doc.registration_center,
+							service_category: values.service_category,
+							service_name: values.service_name,
+						});
+					},
+				});
+				d.show();
+			},
+			__("Звернення"),
 		);
 	}
 }

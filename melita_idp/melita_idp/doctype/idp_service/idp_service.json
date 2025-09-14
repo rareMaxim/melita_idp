@@ -43,6 +43,7 @@
    "allow_in_quick_entry": 1,
    "fieldname": "description",
    "fieldtype": "Small Text",
+   "in_list_view": 1,
    "label": "\u041e\u043f\u0438\u0441"
   },
   {
@@ -93,7 +94,6 @@
    "fieldname": "balance",
    "fieldtype": "Int",
    "label": "\u0417\u0430\u043b\u0438\u0448\u043e\u043a",
-   "mandatory_depends_on": "eval:doc.without_counter==0",
    "non_negative": 1,
    "read_only": 1
   }
@@ -101,7 +101,7 @@
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-09-14 14:07:25.957793",
+ "modified": "2025-09-14 14:57:14.720653",
  "modified_by": "Administrator",
  "module": "Melita Idp",
  "name": "IDP Service",
