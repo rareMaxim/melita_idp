@@ -6,4 +6,21 @@ from frappe.model.document import Document
 
 
 class IDPService(Document):
+	# begin: auto-generated types
+	# This code is auto-generated. Do not modify anything in this block.
+
+	from typing import TYPE_CHECKING
+
+	if TYPE_CHECKING:
+		from frappe.types import DF
+
+		balance: DF.Int
+		category: DF.Link
+		count: DF.Int
+		description: DF.SmallText | None
+		enabled: DF.Check
+		title: DF.Data
+		without_counter: DF.Check
+	# end: auto-generated types
+
 	pass

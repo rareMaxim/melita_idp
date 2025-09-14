@@ -7,12 +7,14 @@
  "engine": "InnoDB",
  "field_order": [
   "date",
+  "support_center",
   "column_break_jtfb",
   "applicant",
-  "column_break_uzrh",
-  "support_center",
-  "section_break_jokq",
-  "services",
+  "family",
+  "section_break_rbas",
+  "service_category",
+  "service_name",
+  "section_break_zszp",
   "photo"
  ],
  "fields": [
@@ -33,20 +35,6 @@
    "fieldtype": "Column Break"
   },
   {
-   "fieldname": "section_break_jokq",
-   "fieldtype": "Section Break"
-  },
-  {
-   "fieldname": "services",
-   "fieldtype": "Table",
-   "label": "\u041f\u043e\u0441\u043b\u0443\u0433\u0438",
-   "options": "IDP Service Table"
-  },
-  {
-   "fieldname": "column_break_uzrh",
-   "fieldtype": "Column Break"
-  },
-  {
    "fetch_from": "applicant.registration_center",
    "fieldname": "support_center",
    "fieldtype": "Link",
@@ -57,13 +45,40 @@
    "fieldname": "photo",
    "fieldtype": "Attach Image",
    "label": "\u0424\u043e\u0442\u043e \u043e\u0442\u0440\u0438\u043c\u0430\u043d\u043d\u044f"
+  },
+  {
+   "fetch_from": "applicant.idp_family",
+   "fieldname": "family",
+   "fieldtype": "Link",
+   "label": "\u0421\u0456\u043c'\u044f",
+   "options": "IDP Family"
+  },
+  {
+   "fieldname": "section_break_rbas",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "service_category",
+   "fieldtype": "Link",
+   "label": "\u041a\u0430\u0442\u0435\u0433\u043e\u0440\u0456\u044f",
+   "options": "IDP Service Category"
+  },
+  {
+   "fieldname": "service_name",
+   "fieldtype": "Link",
+   "label": "\u041f\u043e\u0441\u043b\u0443\u0433\u0430",
+   "options": "IDP Service"
+  },
+  {
+   "fieldname": "section_break_zszp",
+   "fieldtype": "Section Break"
   }
  ],
  "grid_page_length": 50,
  "image_field": "photo",
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-09-02 13:55:15.094676",
+ "modified": "2025-09-14 12:45:30.877292",
  "modified_by": "Administrator",
  "module": "Melita Idp",
  "name": "IDP Appeal",

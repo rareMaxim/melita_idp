@@ -14,12 +14,12 @@ class IDPAppeal(Document):
 	if TYPE_CHECKING:
 		from frappe.types import DF
 
-		from melita_idp.melita_idp.doctype.idp_service_table.idp_service_table import IDPServiceTable
-
 		applicant: DF.Link | None
 		date: DF.Date | None
+		family: DF.Link | None
 		photo: DF.AttachImage | None
-		services: DF.Table[IDPServiceTable]
+		service_category: DF.Link | None
+		service_name: DF.Link | None
 		support_center: DF.Link | None
 	# end: auto-generated types
 

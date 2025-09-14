@@ -5,6 +5,7 @@
 from datetime import date, timedelta
 
 import frappe
+from frappe import _
 from frappe.model.document import Document
 from frappe.utils import getdate, today
 
@@ -83,6 +84,8 @@ class IDPBeneficiary(Document):
 			"\u041f\u0435\u0440\u0435\u043c\u0456\u0441\u0442\u0438\u0432\u0441\u044f",
 			"\u0417\u043d\u044f\u0442\u043e \u0437 \u043e\u0431\u043b\u0456\u043a\u0443",
 			"\u041f\u043e\u043c\u0435\u0440",
+			"\u041f\u043e\u043b\u043e\u043d",
+			"\u0417\u043d\u0438\u043a\u043b\u0438\u0439",
 		]
 		tax_id: DF.Data | None
 		temp_relationship: DF.Data | None
@@ -158,6 +161,7 @@ class IDPBeneficiary(Document):
 			frappe.log_error(f"Помилка при створенні сім'ї для {self.name}: {e!s}")
 
 
+# ... (решта функцій до get_family_members_data залишаються без змін) ...
 def update_beneficiary():
 	"""
 	Масово оновлює дані бенефіціарів (вік та дані з РНОКПП), використовуючи пакетні оновлення.
@@ -166,37 +170,29 @@ def update_beneficiary():
 		"IDP Beneficiary", fields=["name", "date_of_birth", "tax_id", "gender", "age"]
 	)
 
-	# OPTIMIZATION: Prepare a dictionary for bulk_update, not a list.
-	# The format is: { "doc_name_1": {"field_to_update": "value"}, "doc_name_2": {...} }
 	updates_to_perform = {}
 
 	for ben in beneficiaries:
 		fields_to_update = {}
 
-		# 1. Update from Tax ID (РНОКПП)
 		if ben.tax_id:
 			info = get_info_from_rnokpp(ben.tax_id)
 			if "error" not in info:
-				# Update date of birth if it's missing
 				if not ben.date_of_birth and (dob := info.get("birth_date")):
 					fields_to_update["date_of_birth"] = dob
-					ben.date_of_birth = dob  # Use this new value for age calculation
+					ben.date_of_birth = dob
 
-				# Update gender if it's different
 				if (gender := info.get("gender")) and gender != ben.gender:
 					fields_to_update["gender"] = gender
 
-		# 2. Update age if date of birth exists
 		if ben.date_of_birth:
 			age = calculate_age(ben.date_of_birth)
 			if ben.age != age:
 				fields_to_update["age"] = age
 
-		# Add to the main dictionary only if there are actual changes
 		if fields_to_update:
 			updates_to_perform[ben.name] = fields_to_update
 
-	# Perform all database updates in a single bulk operation if there's anything to update
 	if updates_to_perform:
 		frappe.db.bulk_update("IDP Beneficiary", updates_to_perform)
 		frappe.log(f"Оновлено {len(updates_to_perform)} бенефіціарів.")
@@ -205,106 +201,53 @@ def update_beneficiary():
 
 
 def calculate_age(birthdate):
-	"""Розраховує повний вік людини."""
 	if not birthdate:
 		return 0
 	birthdate = getdate(birthdate)
 	today_date = getdate(today())
-	# This calculation is correct and efficient.
-	age = (
+	return (
 		today_date.year
 		- birthdate.year
 		- ((today_date.month, today_date.day) < (birthdate.month, birthdate.day))
 	)
-	return age
 
 
 def get_info_from_rnokpp(rnokpp: str) -> dict:
-	"""
-	Отримує стать та дату народження з РНОКПП.
-
-	Args:
-	        rnokpp: Реєстраційний номер облікової картки платника податків (10-значний рядок).
-
-	Returns:
-	        Словник з ключами 'birth_date' (дата народження) та 'gender' (стать),
-	        або повідомлення про помилку.
-	"""
 	if not rnokpp.isdigit() or len(rnokpp) != 10:
 		return {"error": "РНОКПП повинен складатися з 10 цифр."}
-
 	try:
-		# Визначення дати народження
 		days_offset = int(rnokpp[:5])
 		base_date = date(1899, 12, 31)
 		birth_date = base_date + timedelta(days=days_offset)
-
-		# Визначення статі
 		gender_digit = int(rnokpp[8])
 		gender = "Чоловіча" if gender_digit % 2 != 0 else "Жіноча"
-
 		return {"birth_date": birth_date.strftime("%Y-%m-%d"), "gender": gender}
 	except ValueError:
 		return {"error": "Некоректний формат РНОКПП."}
 
 
 def parse_full_name(full_name: str | None) -> dict[str, str]:
-	"""
-	Розділяє повне ім'я на прізвище, ім'я та по батькові.
-
-	Функція безпечно обробляє порожні рядки, None, а також випадки,
-	коли по батькові відсутнє.
-
-	Args:
-	        full_name: Рядок, що містить повне ім'я (наприклад, "Шевченко Тарас Григорович").
-
-	Returns:
-	        Словник з ключами 'last_name', 'first_name', 'patronymic'.
-	        Наприклад:
-	        {
-	                'last_name': 'Шевченко',
-	                'first_name': 'Тарас',
-	                'patronymic': 'Григорович'
-	        }
-	"""
-	# 1. Попередньо ініціалізуємо результат з порожніми значеннями
 	name_parts = {"last_name": "", "first_name": "", "patronymic": ""}
-
-	# 2. Перевіряємо, чи вхідний рядок не є порожнім або None
 	if not full_name or not full_name.strip():
 		return name_parts
-
-	# 3. Розділяємо рядок на слова по пробілах
 	parts = full_name.strip().split()
-
-	# 4. Розподіляємо частини імені залежно від їх кількості
 	if len(parts) == 1:
-		# Якщо є тільки одне слово, вважаємо його ім'ям
 		name_parts["first_name"] = parts[0]
 	elif len(parts) == 2:
-		# Якщо два слова - це прізвище та ім'я
 		name_parts["last_name"] = parts[0]
 		name_parts["first_name"] = parts[1]
 	elif len(parts) >= 3:
-		# Якщо три або більше слів - це прізвище, ім'я та по батькові
 		name_parts["last_name"] = parts[0]
 		name_parts["first_name"] = parts[1]
 		name_parts["patronymic"] = parts[2]
-
 	return name_parts
 
 
 @frappe.whitelist()
 def add_family_member(family_id, origin_beneficiary_id):
-	"""
-	Повертає дані для створення нового члена сім'ї з заповненими спільними полями.
-	"""
 	try:
-		# Отримуємо дані сім'ї
 		family_doc = frappe.get_doc("IDP Family", family_id)
 		origin_beneficiary = frappe.get_doc("IDP Beneficiary", origin_beneficiary_id)
-
-		# Підготовлюємо дані для нового бенефіціара
 		shared_data = {
 			"origin_region": family_doc.origin_address,
 			"current_region": family_doc.current_address,
@@ -313,35 +256,26 @@ def add_family_member(family_id, origin_beneficiary_id):
 			"displacement_status": origin_beneficiary.displacement_status,
 			"registration_center": origin_beneficiary.registration_center,
 			"idp_family": family_id,
-			"temp_relationship": "Член сім'ї",  # Тимчасове поле для збереження ролі
+			"temp_relationship": "Член сім'ї",
 		}
-
 		return shared_data
-
 	except Exception as e:
 		frappe.throw(f"Помилка при підготовці даних для нового члена сім'ї: {e!s}")
 
 
 @frappe.whitelist()
 def get_family_common_fields(family_id):
-	"""
-	Повертає спільні поля для членів сім'ї.
-	"""
 	try:
 		family_doc = frappe.get_doc("IDP Family", family_id)
-
-		# Знаходимо голову сім'ї для отримання додаткових даних
 		head_member = None
 		for member in family_doc.family_members:
 			if member.relationship == "Голова":
 				head_member = frappe.get_doc("IDP Beneficiary", member.member)
 				break
-
 		common_fields = {
 			"origin_region": family_doc.origin_address,
 			"current_region": family_doc.current_address,
 		}
-
 		if head_member:
 			common_fields.update(
 				{
@@ -351,39 +285,28 @@ def get_family_common_fields(family_id):
 					"registration_center": head_member.registration_center,
 				}
 			)
-
 		return common_fields
-
 	except Exception as e:
 		frappe.throw(f"Помилка при отриманні спільних полів сім'ї: {e!s}")
 
 
 @frappe.whitelist()
 def get_family_members_data(family_id):
-	"""
-	Безпечно повертає дані про членів сім'ї для клієнтського скрипту.
-	"""
 	if not family_id:
 		return []
-
 	try:
 		family_doc = frappe.get_doc("IDP Family", family_id)
 		if not family_doc.family_members:
 			return []
-
 		member_names = [member.member for member in family_doc.family_members]
 		if not member_names:
 			return []
-
-		# Отримуємо дані всіх членів одним запитом
 		member_details = frappe.get_all(
 			"IDP Beneficiary",
 			filters={"name": ("in", member_names)},
 			fields=["name", "full_name", "phone", "age", "gender"],
 		)
 		member_map = {doc.name: doc for doc in member_details}
-
-		# Формуємо фінальний список з усіма даними
 		family_data = []
 		for member_link in family_doc.family_members:
 			details = member_map.get(member_link.member)
@@ -402,3 +325,40 @@ def get_family_members_data(family_id):
 	except Exception as e:
 		frappe.log_error(f"Помилка в get_family_members_data для сім'ї {family_id}: {e!s}")
 		return {"error": str(e)}
+
+
+@frappe.whitelist()
+def transfer_beneficiary_to_another_beneficiarys_family(
+	current_beneficiary_id, target_beneficiary_id, relationship
+):
+	"""
+	Переносить бенефіціара до сім'ї іншого бенефіціара з вказаною роллю.
+	"""
+	if not target_beneficiary_id:
+		frappe.throw(_("Не обрано цільового бенефіціара"))
+	if not relationship:
+		frappe.throw(_("Не вказано роль в новій сім'ї"))
+
+	target_family_id = frappe.db.get_value("IDP Beneficiary", target_beneficiary_id, "idp_family")
+	current_family_id = frappe.db.get_value("IDP Beneficiary", current_beneficiary_id, "idp_family")
+
+	if not target_family_id:
+		try:
+			target_beneficiary_doc = frappe.get_doc("IDP Beneficiary", target_beneficiary_id)
+			from melita_idp.melita_idp.utils.family_utils import create_family_for_beneficiary
+
+			target_family_id = create_family_for_beneficiary(target_beneficiary_doc)
+			if target_family_id:
+				frappe.db.set_value("IDP Beneficiary", target_beneficiary_id, "idp_family", target_family_id)
+			else:
+				frappe.throw(_("Не вдалося створити сім'ю для цільового бенефіціара"))
+		except Exception as e:
+			frappe.log_error(f"Error creating family for {target_beneficiary_id}: {e}")
+			frappe.throw(_("Помилка при створенні нової сім'ї"))
+
+	if current_family_id == target_family_id:
+		return {"success": False, "message": _("Бенефіціар вже в цій сім'ї")}
+
+	from melita_idp.melita_idp.utils.family_utils import transfer_beneficiary_to_family
+
+	return transfer_beneficiary_to_family(current_beneficiary_id, target_family_id, relationship)

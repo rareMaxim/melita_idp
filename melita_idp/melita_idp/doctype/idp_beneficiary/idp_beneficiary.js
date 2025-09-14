@@ -3,11 +3,11 @@
 
 frappe.ui.form.on("IDP Beneficiary", {
 	refresh(frm) {
+		frm.dashboard.add_indicator("Total Sales", "green");
 		updateBirthDayAndGenre(frm);
 		set_document_type(frm);
 		addFamilyButtons(frm);
 		render_family_members(frm);
-		// frm.dirty(false); // Скидаємо "брудний" стан форми після оновлення відображення сім'ї
 	},
 	document(frm) {
 		set_document_type(frm);
@@ -16,7 +16,7 @@ frappe.ui.form.on("IDP Beneficiary", {
 		updateBirthDayAndGenre(frm);
 	},
 	onload(frm) {
-		// Якщо це новий документ з переданими параметрами для члена сім'ї
+		// Якщо це новий документ з переданими параметрами, заповнюємо дані
 		if (frm.is_new() && frappe.route_options) {
 			fillFamilyMemberData(frm);
 		}
@@ -25,9 +25,41 @@ frappe.ui.form.on("IDP Beneficiary", {
 		render_family_members(frm);
 	},
 	after_save(frm) {
-		// Якщо це новий член сім'ї, додаємо його до сім'ї
+		// Якщо це новий член сім'ї з тимчасовою роллю, додаємо його до сім'ї
 		if (frm.doc.temp_relationship && frm.doc.idp_family) {
-			addMemberToFamily(frm);
+			frappe.call({
+				method: "melita_idp.melita_idp.doctype.idp_family.idp_family.add_member_to_family",
+				args: {
+					family_id: frm.doc.idp_family,
+					member_id: frm.doc.name,
+					relationship: frm.doc.temp_relationship,
+				},
+				callback: function (r) {
+					if (r.message && r.message.success) {
+						frappe.show_alert({
+							message: __("Додано до сім'ї як {0}", [
+								frm.doc.temp_relationship,
+							]),
+							indicator: "green",
+						});
+						// Очищуємо тимчасове поле, щоб це не виконувалось знову
+						frappe.db.set_value(
+							"IDP Beneficiary",
+							frm.doc.name,
+							"temp_relationship",
+							null,
+						);
+						frm.doc.temp_relationship = null; // Очищуємо також в локальному об'єкті
+					} else {
+						frappe.show_alert({
+							message: __("Не вдалося додати до сім'ї: {0}", [
+								r.message.message,
+							]),
+							indicator: "red",
+						});
+					}
+				},
+			});
 		}
 	},
 });
@@ -42,13 +74,9 @@ function updateBirthDayAndGenre(frm) {
 		}
 		// eslint-disable-next-line no-undef
 		var data = taxCodeInfo(frm.doc.tax_id);
-		// console.log(data);
 		if (data.error == "ErrInvalidControlDigit") {
 			frappe.show_alert(
-				{
-					message: "Невірно введенний РНОКПП",
-					indicator: "orange",
-				},
+				{ message: "Невірно введенний РНОКПП", indicator: "orange" },
 				5,
 			);
 			return;
@@ -84,17 +112,13 @@ function updateBirthDayAndGenre(frm) {
 					},
 					5,
 				);
-			return;
 		} else if (!frm.doc.gender) {
 			frm.set_value(
 				"gender",
 				data.gender == "Female" ? "Жіноча" : "Чоловіча",
 			);
 			frappe.show_alert(
-				{
-					message: "Встановлено стать з РНОКПП",
-					indicator: "blue",
-				},
+				{ message: "Встановлено стать з РНОКПП", indicator: "blue" },
 				5,
 			);
 		}
@@ -102,46 +126,37 @@ function updateBirthDayAndGenre(frm) {
 }
 
 function addFamilyButtons(frm) {
-	// Видаляємо старі кнопки якщо вони є
 	frm.page.clear_secondary_action();
-
 	if (!frm.doc.__islocal && frm.doc.idp_family) {
-		// Кнопка для додавання нового члена сім'ї
 		frm.add_custom_button(
 			__("Додати члена сім'ї"),
-			function () {
-				addNewFamilyMember(frm);
-			},
+			() => addNewFamilyMember(frm),
 			__("Сім'я"),
 		);
-
-		// Кнопка для переходу до сім'ї
 		frm.add_custom_button(
 			__("Переглянути сім'ю"),
-			function () {
-				frappe.set_route("Form", "IDP Family", frm.doc.idp_family);
-			},
+			() => frappe.set_route("Form", "IDP Family", frm.doc.idp_family),
+			__("Сім'я"),
+		);
+		frm.add_custom_button(
+			__("Перенести в іншу сім'ю"),
+			() => open_transfer_dialog(frm),
 			__("Сім'я"),
 		);
 
-		// Перевіряємо, чи це голова сім'ї
 		frappe.call({
 			method: "melita_idp.melita_idp.doctype.idp_family.idp_family.get_family_head",
-			args: {
-				family_id: frm.doc.idp_family,
-			},
+			args: { family_id: frm.doc.idp_family },
 			callback: function (r) {
 				if (r.message && r.message !== frm.doc.name) {
-					// Якщо це не голова сім'ї, додаємо кнопку переходу до голови
 					frm.add_custom_button(
 						__("Перейти до голови сім'ї"),
-						function () {
+						() =>
 							frappe.set_route(
 								"Form",
 								"IDP Beneficiary",
 								r.message,
-							);
-						},
+							),
 						__("Сім'я"),
 					);
 				}
@@ -150,38 +165,103 @@ function addFamilyButtons(frm) {
 	}
 }
 
-function addNewFamilyMember(frm) {
-	frappe.call({
-		method: "melita_idp.melita_idp.doctype.idp_beneficiary.idp_beneficiary.get_family_common_fields",
-		args: {
-			family_id: frm.doc.idp_family,
-		},
-		callback: function (r) {
-			if (r.message) {
-				// Додаємо ідентифікатор сім'ї до спільних даних
-				r.message.idp_family = frm.doc.idp_family;
-				r.message.temp_relationship = "Член сім'ї";
-
-				// Зберігаємо дані в route_options для передачі в нову форму
-				frappe.route_options = r.message;
-
-				// Переходимо до нової форми створення бенефіціара
-				frappe.new_doc("IDP Beneficiary");
-			}
+function open_transfer_dialog(frm) {
+	let d = new frappe.ui.Dialog({
+		title: __("Перенести в іншу сім'ю"),
+		fields: [
+			{
+				label: __("Перенести до сім'ї, де є"),
+				fieldname: "target_beneficiary",
+				fieldtype: "Link",
+				options: "IDP Beneficiary",
+				reqd: 1,
+				description: __("Вкажіть ПІБ, номер телефону або РНОКПП"),
+			},
+			{
+				label: "Роль в новій сім'ї",
+				fieldname: "relationship",
+				fieldtype: "Select",
+				options:
+					"\nЧоловік/Дружина\nСин/Донька\nБатько/Мати\nБрат/Сестра\nДідусь/Бабуся\nОнук/Онучка\nІнший родич\nОпікуваний",
+				reqd: 1,
+				default: "Інший родич",
+			},
+		],
+		primary_action_label: __("Перенести"),
+		primary_action(values) {
+			frappe.call({
+				method: "melita_idp.melita_idp.doctype.idp_beneficiary.idp_beneficiary.transfer_beneficiary_to_another_beneficiarys_family",
+				args: {
+					current_beneficiary_id: frm.doc.name,
+					target_beneficiary_id: values.target_beneficiary,
+					relationship: values.relationship,
+				},
+				callback: function (r) {
+					if (r.message && r.message.success) {
+						frappe.show_alert({
+							message: __("Бенефіціара перенесено"),
+							indicator: "green",
+						});
+						frm.reload_doc();
+					} else {
+						frappe.show_alert({
+							message: __("Помилка перенесення: {0}", [
+								r.message.message || r.exc,
+							]),
+							indicator: "red",
+						});
+					}
+				},
+			});
+			d.hide();
 		},
 	});
+	d.show();
+}
+
+function addNewFamilyMember(frm) {
+	let d = new frappe.ui.Dialog({
+		title: __("Виберіть роль в сім'ї"),
+		fields: [
+			{
+				label: "Роль в сім'ї",
+				fieldname: "relationship",
+				fieldtype: "Select",
+				options:
+					"\nЧоловік/Дружина\nСин/Донька\nБатько/Мати\nБрат/Сестра\nДідусь/Бабуся\nОнук/Онучка\nІнший родич\nОпікуваний",
+				reqd: 1,
+				default: "Інший родич",
+			},
+		],
+		primary_action_label: __("Створити"),
+		primary_action(values) {
+			d.hide();
+			frappe.call({
+				method: "melita_idp.melita_idp.doctype.idp_beneficiary.idp_beneficiary.get_family_common_fields",
+				args: {
+					family_id: frm.doc.idp_family,
+				},
+				callback: function (r) {
+					if (r.message) {
+						r.message.idp_family = frm.doc.idp_family;
+						r.message.temp_relationship = values.relationship; // Використовуємо обрану роль
+						frappe.route_options = r.message;
+						frappe.new_doc("IDP Beneficiary");
+					}
+				},
+			});
+		},
+	});
+	d.show();
 }
 
 function fillFamilyMemberData(frm) {
-	// Заповнюємо поля новими даними з route_options
 	if (frappe.route_options) {
 		Object.keys(frappe.route_options).forEach(function (key) {
 			if (frappe.route_options[key] && frm.fields_dict[key]) {
 				frm.set_value(key, frappe.route_options[key]);
 			}
 		});
-
-		// Показуємо повідомлення
 		frappe.show_alert(
 			{
 				message: "Заповнено спільні поля для члена сім'ї",
@@ -189,96 +269,12 @@ function fillFamilyMemberData(frm) {
 			},
 			3,
 		);
-
-		// Очищаємо route_options
 		frappe.route_options = null;
 	}
 }
 
-function addMemberToFamily(frm) {
-	let family_doc = frappe.get_doc("IDP Family", frm.doc.idp_family);
-	// Перевіряємо, чи не є вже цей бенефіціар членом сім'ї
-	let already_member = family_doc.family_members.some(function (member) {
-		return member.member === frm.doc.name;
-	});
-
-	if (!already_member) {
-		// Показуємо діалог вибору ролі в сім'ї
-		showRelationshipDialog(frm, family_doc);
-	} else {
-		// Очищаємо тимчасове поле
-		frm.set_value("temp_relationship", "");
-	}
-}
-
-function showRelationshipDialog(frm, family_doc) {
-	let d = new frappe.ui.Dialog({
-		title: "Виберіть роль в сім'ї",
-		fields: [
-			{
-				label: "Роль в сім'ї",
-				fieldname: "relationship",
-				fieldtype: "Select",
-				options: [
-					"Чоловік/Дружина",
-					"Син/Донька",
-					"Батько/Мати",
-					"Брат/Сестра",
-					"Дідусь/Бабуся",
-					"Онук/Онучка",
-					"Інший родич",
-					"Опікуваний",
-				].join("\n"),
-				reqd: 1,
-				default: "Член сім'ї",
-			},
-		],
-		primary_action_label: "Додати до сім'ї",
-		primary_action(values) {
-			// Додаємо нового члена до сім'ї
-			family_doc.family_members.push({
-				member: frm.doc.name,
-				relationship: values.relationship,
-			});
-
-			// Зберігаємо оновлену сім'ю
-			frappe.call({
-				method: "frappe.client.save",
-				args: {
-					doc: family_doc,
-				},
-				callback: function (r) {
-					if (r.message) {
-						frappe.show_alert(
-							{
-								message:
-									"Додано до сім'ї як " + values.relationship,
-								indicator: "green",
-							},
-							3,
-						);
-
-						// Очищаємо тимчасове поле
-						frm.set_value("temp_relationship", "");
-						frm.save();
-
-						// Оновлюємо відображення
-						render_family_members(frm);
-					}
-				},
-			});
-
-			d.hide();
-		},
-	});
-
-	d.show();
-}
-
 function render_family_members(frm) {
-	// Перевіряємо, чи є поле `family_members_html` та ID сім'ї
 	if (!frm.fields_dict["family_members_html"] || !frm.doc.idp_family) {
-		// Якщо немає, очищуємо поле і виходимо
 		if (frm.fields_dict["family_members_html"]) {
 			$(frm.fields_dict["family_members_html"].wrapper).html(
 				"<p>Сім'я не вказана.</p>",
@@ -286,49 +282,38 @@ function render_family_members(frm) {
 		}
 		return;
 	}
-
-	// Показуємо індикатор завантаження
 	$(frm.fields_dict["family_members_html"].wrapper).html(
 		"<p>Завантаження даних сім'ї...</p>",
 	);
-
-	// Викликаємо наш новий серверний метод
 	frappe.call({
 		method: "melita_idp.melita_idp.doctype.idp_beneficiary.idp_beneficiary.get_family_members_data",
-		args: {
-			family_id: frm.doc.idp_family,
-		},
+		args: { family_id: frm.doc.idp_family },
 		callback: function (r) {
 			let family_members = r.message;
 			let html_content = "";
-
 			if (family_members && family_members.length > 0) {
 				html_content = "<div class='family-members-list'>";
 				family_members.forEach(function (member, i) {
-					// Генеруємо HTML-картку для кожного члена сім'ї
 					html_content += `
-						<div class='family-member-card' style='border: 1px solid #eee; padding: 10px; margin-bottom: 10px; border-radius: 5px;'>
-							<h4>${i + 1}. <a href='/app/idp-beneficiary/${member.name}'>${member.full_name || member.name}</a> (${member.relationship})</h4>
-							<p><strong>Телефон:</strong> ${member.phone || "Не вказано"}</p>
-							<p><strong>Вік:</strong> ${member.age || "Не вказано"}</p>
-							<p><strong>Стать:</strong> ${member.gender || "Не вказано"}</p>
-						</div>
-					`;
+                        <div class='family-member-card' style='border: 1px solid #eee; padding: 10px; margin-bottom: 10px; border-radius: 5px;'>
+                            <h4>${i + 1}. <a href='/app/idp-beneficiary/${member.name}'>${member.full_name || member.name}</a> (${member.relationship})</h4>
+                            <p><strong>Телефон:</strong> ${member.phone || "Не вказано"}</p>
+                            <p><strong>Вік:</strong> ${member.age || "Не вказано"}</p>
+                            <p><strong>Стать:</strong> ${member.gender || "Не вказано"}</p>
+                        </div>
+                    `;
 				});
 				html_content += "</div>";
 			} else {
 				html_content =
 					"<p>У цій сім'ї немає зареєстрованих членів.</p>";
 			}
-
-			// !!! Ключовий момент: оновлюємо HTML напряму, не через set_value !!!
 			const field_wrapper = $(
 				frm.fields_dict["family_members_html"].wrapper,
 			);
 			field_wrapper.html(html_content);
 		},
-		error: function (r) {
-			// Обробка помилок
+		error: function () {
 			const field_wrapper = $(
 				frm.fields_dict["family_members_html"].wrapper,
 			);
@@ -338,54 +323,30 @@ function render_family_members(frm) {
 		},
 	});
 }
+
 function set_document_type(frm) {
 	let doc_number = frm.doc.document;
 	if (!doc_number) {
-		// Очищуємо тип документа, якщо номер порожній
 		if (frm.doc.document_type) {
 			frm.set_value("document_type", "");
 			frappe.show_alert(
-				{
-					message: __("Тип документа скинуто."),
-					indicator: "orange",
-				},
+				{ message: __("Тип документа скинуто."), indicator: "orange" },
 				2,
 			);
 		}
 		return;
 	}
-
-	// Переводимо номер документа до верхнього регістру для уніфікації перевірок
-	// і видаляємо зайві пробіли на початку/в кінці
 	doc_number = doc_number.toUpperCase().trim();
-
 	let doc_type = "";
-
-	// 1. Перевірка на ID-картку (формат 00000000-00000)
-	if (/^\d{8}-\d{5}$/.test(doc_number)) {
+	if (/^\d{8}-\d{5}$/.test(doc_number) || /^\d{9}$/.test(doc_number)) {
 		doc_type = "ID-картка";
-	} else if (/^\d{9}$/.test(doc_number)) {
-		doc_type = "ID-картка";
-	}
-
-	// 2. Перевірка на паспорт-книжечку (формат дві кириличні літери, потім 6 цифр)
-	// Допускаємо пробіл або його відсутність між серією та номером
-	// Зверніть увагу, що тут ми вже перевели все у верхній регістр
-	else if (/^[А-ЩЬЮЯҐЄІЇ]{2}\s?\d{6}$/.test(doc_number)) {
+	} else if (/^[А-ЩЬЮЯҐЄІЇ]{2}\s?\d{6}$/.test(doc_number)) {
 		doc_type = "Паспорт";
-	}
-	// 3. Перевірка на свідоцтво про народження (формат I-XX 123456 або І-ХХ 123456)
-	// Римська I (латиниця) АБО Кирилична І (і крапка), дефіс, дві кириличні літери, пробіл, 6 цифр
-	else if (/^[IІА-ЩЬЮЯҐЄІЇ]-[А-ЩЬЮЯҐЄІЇ]{2}\s?\d{6}$/.test(doc_number)) {
-		// Змінено: [IІ]
+	} else if (/^[IІА-ЩЬЮЯҐЄІЇ]-[А-ЩЬЮЯҐЄІЇ]{2}\s?\d{6}$/.test(doc_number)) {
 		doc_type = "Свідоцтво про народження";
 	}
-
-	// Встановлюємо значення, тільки якщо тип було визначено
 	if (doc_type && frm.doc.document_type !== doc_type) {
-		// Додано перевірку, щоб не оновлювати, якщо вже правильний
 		frm.set_value("document_type", doc_type);
-
 		frappe.show_alert(
 			{
 				message: __("Встановлено тип документа: {0}", [doc_type]),
@@ -394,7 +355,6 @@ function set_document_type(frm) {
 			2,
 		);
 	} else if (!doc_type && frm.doc.document_type) {
-		// Якщо тип документа не визначено, але раніше був встановлений, скидуємо його
 		frm.set_value("document_type", "");
 		frappe.show_alert(
 			{
