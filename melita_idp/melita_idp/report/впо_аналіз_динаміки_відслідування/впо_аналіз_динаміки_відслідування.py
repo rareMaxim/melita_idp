@@ -1,23 +1,22 @@
 # Copyright (c) 2025, Maxim S and contributors
 # For license information, please see license.txt
 
-# import frappe
 import frappe
 from frappe import _
-from frappe.utils.data import add_months, date_diff, today
+from frappe.utils import add_months, date_diff, today
 
 
-def execute(filters: dict | None = None):
-	"""Return columns and data for the report.
-
-	This is the main entry point for the report. It accepts the filters as a
-	dictionary and should return columns and data. It is called by the framework
-	every time the report is refreshed or a filter is updated.
-	"""
+def execute(filters=None):
 	columns = get_columns()
 	data = get_data(filters)
 
-	return columns, data
+	# Дані для діаграми
+	chart = get_chart_data(data)
+
+	# Дані для зведеної інформації
+	report_summary = get_report_summary(data)
+
+	return columns, data, None, chart, report_summary
 
 
 def get_columns():
@@ -60,10 +59,16 @@ def get_columns():
 
 
 def get_data(filters):
-	six_months_ago = add_months(today(), -6)
+	months = filters.get("months_inactive") or 6
+	try:
+		months = int(months)
+	except (ValueError, TypeError):
+		months = 6
+
+	inactive_since_date = add_months(today(), -months)
 
 	conditions = "AND b.status = 'Активний'"
-	if filters and filters.get("registration_center"):
+	if filters.get("registration_center"):
 		conditions += " AND b.registration_center = %(registration_center)s"
 
 	sql_query = f"""
@@ -76,28 +81,52 @@ def get_data(filters):
         FROM
             `tabIDP Beneficiary` as b
         WHERE
-            (b.last_visit_date IS NULL OR b.last_visit_date < %(six_months_ago)s)
+            (b.last_visit_date IS NULL OR b.last_visit_date < %(inactive_since_date)s)
             {conditions}
     """
 
-	beneficiaries = frappe.db.sql(
-		sql_query,
-		{
-			"six_months_ago": six_months_ago,
-			"registration_center": filters.get("registration_center") if filters else None,
-		},
-		as_dict=1,
-	)
+	params = {
+		"inactive_since_date": inactive_since_date,
+		"registration_center": filters.get("registration_center"),
+	}
+
+	beneficiaries = frappe.db.sql(sql_query, params, as_dict=1)
 
 	for row in beneficiaries:
 		if row.last_visit_date:
 			row.days_since_visit = date_diff(today(), row.last_visit_date)
 		else:
-			# Якщо візитів не було, рахуємо з дати реєстрації
 			registration_date = frappe.db.get_value("IDP Beneficiary", row.beneficiary, "registration_date")
-			if registration_date:
-				row.days_since_visit = date_diff(today(), registration_date)
-			else:
-				row.days_since_visit = "N/A"
+			row.days_since_visit = date_diff(today(), registration_date) if registration_date else None
 
 	return beneficiaries
+
+
+def get_chart_data(data):
+	"""Готує дані для діаграми."""
+	center_counts = {}
+	for row in data:
+		center = row.get("registration_center") or "Не вказано"
+		center_counts[center] = center_counts.get(center, 0) + 1
+
+	labels = list(center_counts.keys())
+	values = list(center_counts.values())
+
+	return {
+		"data": {"labels": labels, "datasets": [{"name": "Кількість бенефіціарів", "values": values}]},
+		"type": "bar",
+		"height": 280,
+	}
+
+
+def get_report_summary(data):
+	"""Готує зведену інформацію."""
+	total_inactive = len(data)
+	return [
+		{
+			"value": total_inactive,
+			"label": "Загальна кількість неактивних бенефіціарів",
+			"datatype": "Int",
+			"indicator": "Red" if total_inactive > 0 else "Green",
+		}
+	]

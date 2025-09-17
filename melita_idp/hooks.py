@@ -11,15 +11,15 @@ app_license = "mit"
 # required_apps = []
 
 # Each item in the list will be shown as an app in the apps page
-# add_to_apps_screen = [
-# 	{
-# 		"name": "melita_idp",
-# 		"logo": "/assets/melita_idp/logo.png",
-# 		"title": "Melita Idp",
-# 		"route": "/melita_idp",
-# 		"has_permission": "melita_idp.api.permission.has_app_permission"
-# 	}
-# ]
+add_to_apps_screen = [
+	{
+		"name": "melita_idp",
+		"logo": "/assets/melita_idp/melita.webp",
+		"title": "Реєстр ВПО",
+		"route": "/app/melita-idp",
+		# "has_permission": "melita_idp.api.permission.has_app_permission"
+	}
+]
 
 # Includes in <head>
 # ------------------

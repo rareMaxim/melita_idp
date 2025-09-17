@@ -1,0 +1,46 @@
+{
+    "chart_name": "Динаміка неактивних бенефіціарів",
+    "chart_type": "Line",
+    "creation": "2025-09-14 20:00:00.000000",
+    "custom_options": {
+        "colors": [
+            "#FF6B6B",
+            "#4ECDC4",
+            "#45B7D1"
+        ],
+        "axisOptions": {
+            "xIsSeries": true
+        },
+        "lineOptions": {
+            "regionFill": 1
+        }
+    },
+    "docstatus": 0,
+    "doctype": "Dashboard Chart",
+    "filters_json": "{}",
+    "idx": 0,
+    "is_public": 1,
+    "is_standard": 1,
+    "modified": "2025-09-14 20:00:00.000000",
+    "modified_by": "Administrator",
+    "module": "Melita Idp",
+    "name": "Динаміка неактивних бенефіціарів",
+    "number_of_groups": 0,
+    "owner": "Administrator",
+    "report_name": "Неактивні бенефіціари",
+    "roles": [
+        {
+            "role": "System Manager"
+        },
+        {
+            "role": "Sales User"
+        }
+    ],
+    "source": "Report",
+    "timeseries": 0,
+    "time_interval": "Monthly",
+    "type": "Line",
+    "use_report_chart": 1,
+    "x_field": "registration_center",
+    "y_field": "days_since_visit"
+}
