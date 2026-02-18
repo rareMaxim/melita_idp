@@ -1,0 +1,61 @@
+{
+ "app": "melita_idp",
+ "creation": "2025-11-22 01:27:18.698681",
+ "docstatus": 0,
+ "doctype": "Workspace Sidebar",
+ "header_icon": "clap",
+ "idx": 0,
+ "items": [
+  {
+   "child": 0,
+   "collapsible": 1,
+   "indent": 0,
+   "keep_closed": 0,
+   "label": "Home",
+   "link_to": "Melita IDP",
+   "link_type": "Workspace",
+   "show_arrow": 0,
+   "type": "Link"
+  },
+  {
+   "child": 0,
+   "collapsible": 1,
+   "indent": 0,
+   "keep_closed": 0,
+   "label": "\u0417\u0430\u044f\u0432\u043d\u0438\u043a\u0438",
+   "link_to": "IDP Beneficiary",
+   "link_type": "DocType",
+   "show_arrow": 0,
+   "type": "Link"
+  },
+  {
+   "child": 0,
+   "collapsible": 1,
+   "indent": 0,
+   "keep_closed": 0,
+   "label": "\u0420\u043e\u0434\u0438\u043d\u0438",
+   "link_to": "IDP Family",
+   "link_type": "DocType",
+   "show_arrow": 0,
+   "type": "Link"
+  },
+  {
+   "child": 0,
+   "collapsible": 1,
+   "indent": 0,
+   "keep_closed": 0,
+   "label": "\u0414\u043e\u043f\u043e\u043c\u043e\u0433\u0430",
+   "link_to": "IDP Appeal",
+   "link_type": "DocType",
+   "show_arrow": 0,
+   "type": "Link"
+  }
+ ],
+ "modified": "2026-02-12 10:51:42.396706",
+ "modified_by": "Administrator",
+ "module": "Melita Idp",
+ "name": "Melita IDP",
+ "owner": "Administrator",
+ "standard": 1,
+ "title": "Melita IDP"
+}

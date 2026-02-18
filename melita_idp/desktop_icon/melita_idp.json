@@ -1,0 +1,22 @@
+{
+ "app": "melita_idp",
+ "creation": "2025-11-22 01:27:18.520646",
+ "docstatus": 0,
+ "doctype": "Desktop Icon",
+ "hidden": 0,
+ "icon_type": "App",
+ "idx": 3,
+ "label": "Melita Idp",
+ "link": "/app/melita-idp",
+ "link_to": "Melita IDP",
+ "link_type": "Workspace Sidebar",
+ "logo_url": "/assets/melita_idp/melita.webp",
+ "modified": "2026-02-13 09:16:56.662497",
+ "modified_by": "Administrator",
+ "name": "Melita Idp",
+ "owner": "Administrator",
+ "restrict_removal": 0,
+ "roles": [],
+ "sidebar": "Melita IDP",
+ "standard": 1
+}
